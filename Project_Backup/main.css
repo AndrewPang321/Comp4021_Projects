@@ -1,0 +1,46 @@
+/* Style to make the svg fit in the browser */
+body { padding: 0; margin: 0; }
+svg  { width: 100%; height: auto; }
+
+#player {
+    transform: translate(10px, 155px) scale(0.12, 0.12);
+}
+
+@keyframes rect1-animation {
+    from { transform: translateX(1000px); }
+    to   { transform: translateX(-250px); }
+}
+
+#rect_1 {
+    animation-name: rect1-animation;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-duration: 10s;
+    animation-play-state: running;
+}
+
+@keyframes circle1-animation {
+    from { transform: translateX(900px); }
+    to   { transform: translateX(-500px); }
+}
+
+#circle_1 {
+    animation-name: circle1-animation;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-duration: 5s;
+    animation-play-state: running;
+}
+
+@keyframes spinner-animation {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+#spinner {
+    animation-name: spinner-animation;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-duration: 8s;
+    animation-play-state: running;
+}

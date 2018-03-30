@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Block Survivor</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="main.js"></script>
+
+    <!-- This is the font returned from Google font -->
+    <link href="https://fonts.googleapis.com/css?family=Dosis:700" rel="stylesheet">
+    <link href="main.css" rel="stylesheet">
+
+    <style>
+    /* The container moves the text to the middle of the screen */
+    #gameover-container {
+        transform: translate(500px,200px);
+    }
+
+    /* Set up the gameover animation */
+    @keyframes gameover-animation {
+      from { transform: rotate(0deg); font-size: 1px; opacity: 0; }
+      to   { transform: rotate(1440deg); font-size: 80px; opacity: 1; }
+    }
+
+    #gameover {
+        font-family: Dosis, sans-serif;
+        animation-name: gameover-animation;
+        animation-duration: 5s;
+        animation-timing-function: linear;
+        animation-iteration-count: 1;
+        animation-play-state: paused;
+    }
+    </style>
+    <script>
+    // Check whether the game is over if the player is near the obstacle
+    function checkGameover() {
+        var y = $("#player").css("transform");
+        y = parseFloat(y.split(" ")[5]);
+        var x = $("#obstacle").css("transform");
+        x = parseFloat(x.split(" ")[4]);
+
+        if (x > 100 && x < 200 && y > -5) {
+            $(".cloud").css("animationPlayState", "paused");
+            $("#obstacle").css("animationPlayState", "paused");
+            $("#player").css("animationPlayState", "paused");
+
+            $("#gameover").show();
+            $("#gameover").css("animationPlayState", "running");
+        }
+        else
+            requestAnimationFrame(checkGameover);
+    }
+
+    // Make a obstacle by starting the obstacle animation
+    function makeObstacle() {
+        // Start the animation after a random time
+        setTimeout(function() {
+            $("#obstacle").css("animationPlayState", "running");
+        }, Math.random() * 2000);
+    }
+
+    // Make the player jump by starting the player animation
+    function jump() {
+        $("#player").css("animationPlayState", "running");
+    }
+
+    $(document).ready(function () {
+        // Handle the spacebar key for controlling the player
+        $(document).on("keydown", function(e) {
+            // The player jumps if the spacebar key is down
+            if (e.keyCode == 32)
+                jump();
+        });
+
+        // Stop the obstacle animation and restart later
+        $("#obstacle").on("animationiteration", function() {
+            $("#obstacle").css("animationPlayState", "paused");
+            makeObstacle();
+        });
+
+        // Stop the player animation
+        $("#player").on("animationiteration", function() {
+            $("#player").css("animationPlayState", "paused");
+        });
+
+        // Start the obstacle animation
+        makeObstacle();
+
+        // Start the game over checking
+        requestAnimationFrame(checkGameover);
+    });
+    </script>
+</head>
+<body>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+        <defs>
+            <linearGradient y2="1" x2="0" id="sky">
+                <stop offset="0" stop-color="#246b88"/>
+                <stop offset="0.7" stop-color="#43c8ff"/>
+            </linearGradient>
+        </defs>
+
+        <!-- The sky -->
+        <rect height="400" width="1000" y="0" x="0" stroke="none" fill="url(#sky)"/>
+
+        <!-- The player -->
+        <g id="player">
+            <path d="M547.888,273.237c-4.948-6.661-32.264-15.513-81.94-26.551l-100.502-9.135l-63.953-18.273h-18.268L199.568,118.78h19.698
+                c4.952,0,9.234-0.428,12.85-1.287c3.617-0.859,5.424-1.952,5.424-3.284c0-1.331-1.807-2.424-5.424-3.284
+                c-3.616-0.855-7.898-1.285-12.85-1.285H191.86h-45.679h-18.274v9.135h18.274v118.771h-45.683l-54.818-63.954H18.274l-9.136,9.136
+                v54.818h9.136v9.135h36.547v2.284L0,255.818v36.546l54.821,6.851v2.283H18.274v9.13H9.139v54.823l9.136,9.134h27.406l54.818-63.954
+                h45.683v118.777h-18.274v9.13h18.274h45.679h27.407c4.952,0,9.234-0.425,12.85-1.28c3.617-0.862,5.424-1.954,5.424-3.288
+                c0-1.331-1.807-2.427-5.424-3.289c-3.616-0.855-7.898-1.28-12.85-1.28h-19.698l83.656-100.502h18.268l63.953-18.273l100.506-9.131
+                c54.625-12.183,82.036-21.32,82.228-27.408L547.888,273.237z"/>
+        </g>
+
+        <!-- The obstacle: rect -->
+        <rect id="rect_1" height="100" width="80" y="300" x="200" stroke="none" fill="orange"/>
+
+        <!-- The obstacle: circle -->
+        <circle id ="circle_1" cx="350" cy="90" r="50" fill="yellow"/>
+
+        <!-- The obstacle: spinner -->
+        <rect id="spinner" height="150" width="15" y="200" x="500" stroke="none" fill="red"/>
+
+        <!-- The game over text -->
+        <g id="gameover-container">
+            <text id="gameover" x="0" y="0" fill="red" font-size="80px" text-anchor="middle" style="display: none">Game Over</text>
+        </g>
+    </svg>
+</html>
