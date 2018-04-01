@@ -117,10 +117,13 @@
         <rect id="rect_1" height="100" width="80" y="300" x="200" stroke="none" fill="orange"/>
 
         <!-- The obstacle: circle -->
-        <circle id ="circle_1" cx="350" cy="90" r="50" fill="yellow"/>
+        <circle id="circle_1" cx="350" cy="90" r="50" fill="yellow"/>
 
         <!-- The obstacle: spinner -->
-        <rect id="spinner" height="150" width="15" y="200" x="500" stroke="none" fill="red"/>
+        <defs>
+            <polygon id="spinner_1" points="100,30 50,100 150,130" fill="red"/>
+        </defs>
+        <use x="400" y="100" xlink:href="#spinner_1"/>
 
         <!-- The game over text -->
         <g id="gameover-container">
