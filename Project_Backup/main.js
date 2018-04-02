@@ -2,7 +2,9 @@ var rightPressed = false;
 var leftPressed = false;
 var upPressed = false;
 var downPressed = false;
+var spacePressed = false;
 var gameover = false;
+var bulletReload = false;   // The bullet can only be fired in every 2s
 
 // Get back the current x-coordinate value in px
 function getComputedTranslateX(value)
@@ -24,6 +26,51 @@ document.addEventListener("keydown", keyDownHandler, false);
 // Handling the movement of up, down, left, right when key pressed
 function keyDownHandler(event) {
     if (!gameover) {
+        if (event.keyCode == 32) {
+            spacePressed = true;
+            console.log("space clicked");
+            // Check whether reload is completed
+            if (!bulletReload) {
+                $('#player').css("transform", function(index, value) {
+                    var transformX = getComputedTranslateX(value) + 65;
+                    var transformY = getComputedTranslateY(value) + 30;
+                    if (transformX == -1 || transformY == -1) {
+                        console.log("getComputedTranslate value error: -1")
+                    } else {
+                        // Define keyframe css animation dynamically by jquery.keyframes
+                        $.keyframe.define({
+                            name: 'fire-bullet',
+                            from: {
+                                'transform': 'translate(' + transformX + 'px,' + transformY + 'px)'
+                            },
+                            to: {
+                                'transform': 'translate(100%,' + transformY + 'px)'
+                            }
+                        });
+                        // To show the bullet according to the airplane's location
+                        $('#bullet').css({
+                            "display": "block",
+                            "transform": "translate(" + transformX + "px," + transformY + "px)"
+                        });
+                        // Run the dynamically-defined keyframe
+                        $('#bullet').playKeyframe({
+                            name: 'fire-bullet',
+                            duration: '2s',
+                            timingFunction: 'linear',
+                            fillMode: 'forwards'
+                        });
+                        // Reload the bullet
+                        bulletReload = true;
+                        reloading = setInterval(function(){
+                            console.log('reloading bullet...');
+                            // Reload is finished
+                            bulletReload = false;
+                            clearInterval(reloading);
+                        },2000);
+                    }
+                });
+            }
+        }
         if (event.keyCode == 39) {
             rightPressed = true;
             console.log("right clicked");
@@ -93,12 +140,12 @@ function makeObstacle() {
         $("#rect_1").css("animationPlayState", "running");
     }, Math.random() * 2000);
     
-    circle_1 = setTimeout(function() {
-        $("#circle_1").css("animationPlayState", "running");
+    rect_2 = setTimeout(function() {
+        $("#rect_2").css("animationPlayState", "running");
     }, Math.random() * 2000);
 
-    spinner_1 = setTimeout(function() {
-        $("#spinner_1").css("animationPlayState", "running");
+    rect_3 = setTimeout(function() {
+        $("#rect_3").css("animationPlayState", "running");
     }, Math.random() * 2000);
 }
 
@@ -111,61 +158,73 @@ function checkBoundingBoxIntersect(obj1, obj2) {
     return !(obj2.left > obj1.right || obj2.right < obj1.left || obj2.top > obj1.bottom || obj2.bottom < obj1.top);
 }
 
-// Advanced collision checking
-// Credit: Jonas Raoni Soares Silva
-// @ http://jsfromhell.com/math/is-point-in-poly [rev. #0]
-function isPointInPoly(poly, pt){
-    for(var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
-        ((poly[i].y <= pt.y && pt.y < poly[j].y) || (poly[j].y <= pt.y && pt.y < poly[i].y))
-        && (pt.x < (poly[j].x - poly[i].x) * (pt.y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x)
-        && (c = !c);
-    return c;
-}
-
 function stopAnimation() {
     gameover = true;      
     $("#rect_1").css("animationPlayState", "paused");
-    $("#circle_1").css("animationPlayState", "paused");
-    $("#spinner_1").css("animationPlayState", "paused");
+    $("#rect_2").css("animationPlayState", "paused");
+    $("#rect_3").css("animationPlayState", "paused");
+    $("#bullet").pauseKeyframe();
+    $("#bullet").css("display", "none");
+}
+
+function restartAnimation(obj) {
+    var element = obj;
+    var newone = element.clone(true);
+    newone.css("display", "block");
+    newone.css("animationPlayState", "running");
+    element.before(newone);
+    element.remove();
+}
+
+// Helper function on animation of bullet-obstacle collsion
+function bulletObstacleCollisionAnimation(bullet, obstacle) {
+    // Reload bullet immediately
+    clearInterval(reloading);
+    bulletReload = false;
+    // Hide Obstacle
+    obstacle.css("display", "none");
+    obstacle.css("animationPlayState", "paused");
+    // Hide Bullet
+    bullet.pauseKeyframe();
+    bullet.css("display", "none");
+    // Restart animation after random seconds
+    setTimeout(function() {
+        restartAnimation(obstacle);
+    }, Math.random() * 2000);
+}
+
+function checkBulletCollision() {
+    var bullet = $("#bullet").get(0);
+    var rect_1 = $("#rect_1").get(0);
+    var rect_2 = $("#rect_2").get(0);
+    var rect_3 = $("#rect_3").get(0);
+
+    if (checkBoundingBoxIntersect(bullet, rect_1)) {
+        bulletObstacleCollisionAnimation($("#bullet"), $("#rect_1"));
+    } else if (checkBoundingBoxIntersect(bullet, rect_2)) {
+        bulletObstacleCollisionAnimation($("#bullet"), $("#rect_2"));
+    } else if (checkBoundingBoxIntersect(bullet, rect_3)) {
+        bulletObstacleCollisionAnimation($("#bullet"), $("#rect_3"));
+    } 
 }
 
 // Check if there is collision between player and obstacles
 function checkGameover() {
     var player = $("#player").get(0);
     var rect_1 = $("#rect_1").get(0);
-    var circle_1 = $("#circle_1").get(0);
-    var spinner_1 = $("#spinner_1").get(0);
+    var rect_2 = $("#rect_2").get(0);
+    var rect_3 = $("#rect_3").get(0);
     
     if (checkBoundingBoxIntersect(player, rect_1)) {
         stopAnimation();
-    } else if (checkBoundingBoxIntersect(player, circle_1)) {
+    } else if (checkBoundingBoxIntersect(player, rect_2)) {
         stopAnimation();
-    } else if (checkBoundingBoxIntersect(player, spinner_1)) {
+    } else if (checkBoundingBoxIntersect(player, rect_3)) {
         stopAnimation();
     } else {
+        requestAnimationFrame(checkBulletCollision);
         requestAnimationFrame(checkGameover);
     }
-
-    // Player x,y coordinate
-    // var player = $("#player").css("transform");
-    // var player_x = parseFloat(player.split(" ")[4]);
-    // var player_y = parseFloat(player.split(" ")[5]);
-    // console.log("player: " + player);
-    // console.log($("#player").get(0).getBoundingClientRect());
-
-    // Obstacle rect_1 x,y coordinate
-    // var rect_1 = $("#rect_1").css("transform");
-    // var rect_1_x = parseFloat(rect_1.split(" ")[4]);
-    // var rect_1_y = parseFloat(rect_1.split(" ")[5]);
-    // console.log("rect_1: " + rect_1);
-
-    // if (player_x == rect_1_x && player_y == rect_1_y) {
-    //     $("#rect_1").css("animationPlayState", "paused");
-    //     $("#circle_1").css("animationPlayState", "paused");
-    //     $("#spinner_1").css("animationPlayState", "paused");
-    // } else {
-    //     requestAnimationFrame(checkGameover);
-    // }
 }
 
 $(document).ready(function() {

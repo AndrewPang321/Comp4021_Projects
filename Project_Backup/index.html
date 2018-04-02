@@ -3,6 +3,7 @@
 <head>
     <title>Block Survivor</title>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="./Keyframes-jQuery.Keyframes-f383a7c/dist/jquery.keyframes.min.js"></script>
     <script src="main.js"></script>
 
     <!-- This is the font returned from Google font -->
@@ -44,18 +45,6 @@
         <rect height="400" width="1000" y="0" x="0" stroke="none" fill="url(#sky)"/>
 
         <!-- The player -->
-        <!-- <defs>
-            <g id="player">
-                <path d="M547.888,273.237c-4.948-6.661-32.264-15.513-81.94-26.551l-100.502-9.135l-63.953-18.273h-18.268L199.568,118.78h19.698
-                    c4.952,0,9.234-0.428,12.85-1.287c3.617-0.859,5.424-1.952,5.424-3.284c0-1.331-1.807-2.424-5.424-3.284
-                    c-3.616-0.855-7.898-1.285-12.85-1.285H191.86h-45.679h-18.274v9.135h18.274v118.771h-45.683l-54.818-63.954H18.274l-9.136,9.136
-                    v54.818h9.136v9.135h36.547v2.284L0,255.818v36.546l54.821,6.851v2.283H18.274v9.13H9.139v54.823l9.136,9.134h27.406l54.818-63.954
-                    h45.683v118.777h-18.274v9.13h18.274h45.679h27.407c4.952,0,9.234-0.425,12.85-1.28c3.617-0.862,5.424-1.954,5.424-3.288
-                    c0-1.331-1.807-2.427-5.424-3.289c-3.616-0.855-7.898-1.28-12.85-1.28h-19.698l83.656-100.502h18.268l63.953-18.273l100.506-9.131
-                    c54.625-12.183,82.036-21.32,82.228-27.408L547.888,273.237z"/>
-            </g>
-        </defs>
-        <use x="10" y="155" xlink:href="#player"/> -->
         <g id="player">
             <path d="M547.888,273.237c-4.948-6.661-32.264-15.513-81.94-26.551l-100.502-9.135l-63.953-18.273h-18.268L199.568,118.78h19.698
                 c4.952,0,9.234-0.428,12.85-1.287c3.617-0.859,5.424-1.952,5.424-3.284c0-1.331-1.807-2.424-5.424-3.284
@@ -66,17 +55,13 @@
                 c54.625-12.183,82.036-21.32,82.228-27.408L547.888,273.237z"/>
         </g>
 
+        <!-- The bullet -->
+        <rect id="bullet" height="5" width="12" stroke="none" fill="black"/>
+
         <!-- The obstacle: rect -->
         <rect id="rect_1" height="100" width="80" y="300" x="200" stroke="none" fill="orange"/>
-
-        <!-- The obstacle: circle -->
-        <circle id="circle_1" cx="350" cy="90" r="50" fill="yellow"/>
-
-        <!-- The obstacle: spinner -->
-        <defs>
-            <polygon id="spinner_1" points="100,30 50,100 150,130" fill="red"/>
-        </defs>
-        <use x="400" y="100" xlink:href="#spinner_1"/>
+        <rect id="rect_2" height="120" width="70" y="70" x="20" stroke="none" fill="yellow"/>
+        <rect id="rect_3" height="80" width="150" y="100" x="300" stroke="none" fill="red"/>
 
         <!-- The game over text -->
         <g id="gameover-container">
