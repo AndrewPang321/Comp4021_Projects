@@ -6,9 +6,48 @@ var spacePressed = false;
 var gameover = false;
 var bulletReload = false;   // The bullet can only be fired in every 2s
 var reloading;  // For storing the setInterval() in order to clear it
+<<<<<<< HEAD
 var lives = 3;  // Player's lives
+=======
+var countdownNumberEl = document.getElementById('countdown-number');
+var countdown = 180;
+>>>>>>> 81e84e9abe1f920bf8170ad004f6974c2550e31f
 
 // Get back the current x-coordinate value in px
+function showStart()
+{
+  document.getElementById("StartScreen").style.display="block";
+  document.getElementById("EndScreen").style.display="none";
+}
+function start()
+{
+  document.getElementById("StartScreen").style.display="none";
+  document.getElementById("EndScreen").style.display="none";
+  makeObstacle();
+  requestAnimationFrame(checkGameover);
+  gameover=false;
+
+}
+function end()
+{
+  document.getElementById("EndScreen").style.display="block";
+  // // $("#rect_1").y=300;
+  // // $("#rect_1").x=200;
+  // // $("#rect_2").y=70;
+  // // $("#rect_2").x=20;
+  // // $("#rect_3").y=100;
+  // // $("#rect_3").x=300;
+  // // $("#rect_4").y=200;
+  // // $("#rect_4").x=600;
+  restartAnimation($("#rect_1"));
+  restartAnimation($("#rect_2"));
+  restartAnimation($("#rect_3"));
+  restartAnimation($("#rect_4"));
+  $("#rect_1").css("animationPlayState", "paused");
+  $("#rect_2").css("animationPlayState", "paused");
+  $("#rect_3").css("animationPlayState", "paused");
+  $("#rect_4").css("animationPlayState", "paused");
+}
 function getComputedTranslateX(value)
 {
     var mat = value.match(/^matrix\((.+)\)$/);
@@ -22,9 +61,13 @@ function getComputedTranslateY(value)
     return mat ? parseFloat(mat[1].split(', ')[5]) : -1;
 }
 
-document.addEventListener("keydown", keyDownHandler, false);
-// document.addEventListener("keyup", keyUpHandler, false);
+function reset()
+{
+  location.reload();
+}
 
+// document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("keydown", keyDownHandler, false);
 // Handling the movement of up, down, left, right when key pressed
 function keyDownHandler(event) {
     if (!gameover) {
@@ -82,7 +125,7 @@ function keyDownHandler(event) {
                 if (transformX == -1 || transformY == -1) console.log("getComputedTranslate value error: -1");
                 if (transformX < 720) {
                     transformX += 10;
-                    return "translate(" + transformX + "px," + transformY + "px) scale(0.12, 0.12)";  
+                    return "translate(" + transformX + "px," + transformY + "px) scale(0.12, 0.12)";
                 } else {
                     return "translate(" + transformX + "px," + transformY + "px) scale(0.12, 0.12)";
                 }
@@ -141,7 +184,7 @@ function makeObstacle() {
     rect_1 = setTimeout(function() {
         $("#rect_1").css("animationPlayState", "running");
     }, Math.random() * 2000);
-    
+
     rect_2 = setTimeout(function() {
         $("#rect_2").css("animationPlayState", "running");
     }, Math.random() * 2000);
@@ -149,7 +192,7 @@ function makeObstacle() {
     rect_3 = setTimeout(function() {
         $("#rect_3").css("animationPlayState", "running");
     }, Math.random() * 2000);
-    
+
     rect_4 = setTimeout(function() {
         $("#rect_4").css("animationPlayState", "running");
     }, Math.random() * 2000);
@@ -190,13 +233,14 @@ function checkBoundingBoxIntersect(obj1, obj2) {
 }
 
 function stopAnimation() {
-    gameover = true;      
+    gameover = true;
     $("#rect_1").css("animationPlayState", "paused");
     $("#rect_2").css("animationPlayState", "paused");
     $("#rect_3").css("animationPlayState", "paused");
     $("#rect_4").css("animationPlayState", "paused");
     $("#bullet").pauseKeyframe();
     $("#bullet").css("display", "none");
+    end();
 }
 
 function restartAnimation(obj) {
@@ -204,6 +248,13 @@ function restartAnimation(obj) {
     var newone = element.clone(true);
     newone.css("display", "block");
     newone.css("animationPlayState", "running");
+    element.before(newone);
+    element.remove();
+}
+
+function restartPlayer(obj) {
+    var element = obj;
+    var newone = element.clone(true);
     element.before(newone);
     element.remove();
 }
@@ -250,7 +301,7 @@ function checkGameover() {
     var rect_2 = $("#rect_2").get(0);
     var rect_3 = $("#rect_3").get(0);
     var rect_4 = $("#rect_4").get(0);
-    
+
     if (checkBoundingBoxIntersect(player, rect_1)) {
         updateLives();
         if (lives == 0) {
@@ -295,12 +346,18 @@ function checkGameover() {
 
 $(document).ready(function() {
     // Start the obstacle animation
-    makeObstacle();
+    showStart();
 
     // Start the game over checking
-    requestAnimationFrame(checkGameover);
+    //requestAnimationFrame(checkGameover);
 });
 
+//timer
+setInterval(function() {
+  countdown = --countdown <= 0 ? 10 : countdown;
+
+  document.getElementById("countdown-number").textContent = countdown;
+}, 1000);
 // function keyUpHandler(e) {
 //     if(event.keyCode == 39) {
 //         rightPressed = false;

@@ -83,6 +83,33 @@ svg  { width: 100%; height: auto; }
     50% { transform: translate(730px, -10px) scale(0.1, 0.1); }
     100% { transform: translate(730px, -10px) scale(0.08, 0.08); }
 }
+.start {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    padding-top: 25vh;
+    text-align: center;
+    font-size: 8vh;
+    /* line-height: 100vh; */
+    background-color: rgba(0, 120, 200, 0.6);
+}
+.end
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    padding-top: 25vh;
+    text-align: center;
+    font-size: 8vh;
+    background-color: rgba(200, 0, 120, 0.6);
+}
+a:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
 
 #heart_1 {
     animation-name: reduce-heart-1;
@@ -103,4 +130,19 @@ svg  { width: 100%; height: auto; }
     animation-duration: 3s;
     animation-play-state: paused;
     transform: translate(730px, -10px) scale(0.08, 0.08);
+}
+
+svg circle {
+    stroke-dasharray: 113px;
+    stroke-dashoffset: 0px;
+    stroke-linecap: round;
+    stroke-width: 2px;
+    stroke: white;
+    fill: none;
+    animation: countdown 180s linear infinite forwards;
+  }
+
+@keyframes countdown {
+    from { stroke-dashoffset: 0px; }
+    to { stroke-dashoffset: 113px; }
 }
