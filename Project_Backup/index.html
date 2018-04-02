@@ -33,6 +33,16 @@
     </style>
 </head>
 <body>
+    <!-- The Start Screen -->
+    <div class="box start" id ="StartScreen">
+        <p>Space Rocket</p>
+        <a id="button" href="#" onclick="start()">Start Game!</a>
+    </div>
+    <div class="box end" id ="EndScreen">
+        <p>Game Over</p>
+        <a id="button" href="#" onclick="reset()">Try again!</a>
+    </div>
+
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
         <defs>
             <linearGradient y2="1" x2="0" id="sky">
@@ -63,16 +73,6 @@
         <rect id="rect_2" height="120" width="70" y="70" x="20" stroke="none" fill="yellow"/>
         <rect id="rect_3" height="80" width="150" y="100" x="300" stroke="none" fill="red"/>
         <rect id="rect_4" height="50" width="50" y="200" x="600" stroke="none" fill="pink"/>
-
-        <!-- The Start Screen -->
-        <div class="box start" id ="StartScreen">
-            <p>Space Rocket</p>
-            <a id="button" href="#" onclick="start()">Start Game!</a>
-        </div>
-        <div class="box end" id ="EndScreen">
-            <p>Game Over</p>
-            <a id="button" href="#" onclick="reset()">Try again!</a>
-        </div>
 
         <!-- Player's lives: hearts -->
         <g id="heart_1">

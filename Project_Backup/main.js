@@ -13,37 +13,42 @@ var countdown = 180;
 // Get back the current x-coordinate value in px
 function showStart()
 {
-  document.getElementById("StartScreen").style.display="block";
-  document.getElementById("EndScreen").style.display="none";
+    document.getElementById("StartScreen").style.display="block";
+    document.getElementById("EndScreen").style.display="none";
 }
 function start()
 {
-  document.getElementById("StartScreen").style.display="none";
-  document.getElementById("EndScreen").style.display="none";
-  makeObstacle();
-  requestAnimationFrame(checkGameover);
-  gameover=false;
+    document.getElementById("StartScreen").style.display="none";
+    document.getElementById("EndScreen").style.display="none";
+    makeObstacle();
+    //timer
+    timer = setInterval(function() {
+        countdown = --countdown <= 0 ? 10 : countdown;
 
+        document.getElementById("countdown-number").textContent = countdown;
+    }, 1000);
+    requestAnimationFrame(checkGameover);
+    gameover=false;
 }
 function end()
 {
-  document.getElementById("EndScreen").style.display="block";
-  // // $("#rect_1").y=300;
-  // // $("#rect_1").x=200;
-  // // $("#rect_2").y=70;
-  // // $("#rect_2").x=20;
-  // // $("#rect_3").y=100;
-  // // $("#rect_3").x=300;
-  // // $("#rect_4").y=200;
-  // // $("#rect_4").x=600;
-  restartAnimation($("#rect_1"));
-  restartAnimation($("#rect_2"));
-  restartAnimation($("#rect_3"));
-  restartAnimation($("#rect_4"));
-  $("#rect_1").css("animationPlayState", "paused");
-  $("#rect_2").css("animationPlayState", "paused");
-  $("#rect_3").css("animationPlayState", "paused");
-  $("#rect_4").css("animationPlayState", "paused");
+    document.getElementById("EndScreen").style.display="block";
+    // // $("#rect_1").y=300;
+    // // $("#rect_1").x=200;
+    // // $("#rect_2").y=70;
+    // // $("#rect_2").x=20;
+    // // $("#rect_3").y=100;
+    // // $("#rect_3").x=300;
+    // // $("#rect_4").y=200;
+    // // $("#rect_4").x=600;
+    restartAnimation($("#rect_1"));
+    restartAnimation($("#rect_2"));
+    restartAnimation($("#rect_3"));
+    restartAnimation($("#rect_4"));
+    $("#rect_1").css("animationPlayState", "paused");
+    $("#rect_2").css("animationPlayState", "paused");
+    $("#rect_3").css("animationPlayState", "paused");
+    $("#rect_4").css("animationPlayState", "paused");
 }
 function getComputedTranslateX(value)
 {
@@ -351,12 +356,6 @@ $(document).ready(function() {
     // requestAnimationFrame(checkGameover);
 });
 
-//timer
-timer = setInterval(function() {
-  countdown = --countdown <= 0 ? 10 : countdown;
-
-  document.getElementById("countdown-number").textContent = countdown;
-}, 1000);
 // function keyUpHandler(e) {
 //     if(event.keyCode == 39) {
 //         rightPressed = false;
