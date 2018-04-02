@@ -5,6 +5,7 @@ var downPressed = false;
 var spacePressed = false;
 var gameover = false;
 var bulletReload = false;   // The bullet can only be fired in every 2s
+var reloading;  // For storing the setInterval() in order to clear it
 
 // Get back the current x-coordinate value in px
 function getComputedTranslateX(value)
@@ -147,6 +148,10 @@ function makeObstacle() {
     rect_3 = setTimeout(function() {
         $("#rect_3").css("animationPlayState", "running");
     }, Math.random() * 2000);
+    
+    rect_4 = setTimeout(function() {
+        $("#rect_4").css("animationPlayState", "running");
+    }, Math.random() * 2000);
 }
 
 // Simple collision checking
@@ -163,6 +168,7 @@ function stopAnimation() {
     $("#rect_1").css("animationPlayState", "paused");
     $("#rect_2").css("animationPlayState", "paused");
     $("#rect_3").css("animationPlayState", "paused");
+    $("#rect_4").css("animationPlayState", "paused");
     $("#bullet").pauseKeyframe();
     $("#bullet").css("display", "none");
 }
@@ -198,6 +204,7 @@ function checkBulletCollision() {
     var rect_1 = $("#rect_1").get(0);
     var rect_2 = $("#rect_2").get(0);
     var rect_3 = $("#rect_3").get(0);
+    var rect_4 = $("#rect_4").get(0);
 
     if (checkBoundingBoxIntersect(bullet, rect_1)) {
         bulletObstacleCollisionAnimation($("#bullet"), $("#rect_1"));
@@ -205,7 +212,9 @@ function checkBulletCollision() {
         bulletObstacleCollisionAnimation($("#bullet"), $("#rect_2"));
     } else if (checkBoundingBoxIntersect(bullet, rect_3)) {
         bulletObstacleCollisionAnimation($("#bullet"), $("#rect_3"));
-    } 
+    } else if (checkBoundingBoxIntersect(bullet, rect_4)) {
+        bulletObstacleCollisionAnimation($("#bullet"), $("#rect_4"));
+    }
 }
 
 // Check if there is collision between player and obstacles
@@ -214,12 +223,15 @@ function checkGameover() {
     var rect_1 = $("#rect_1").get(0);
     var rect_2 = $("#rect_2").get(0);
     var rect_3 = $("#rect_3").get(0);
+    var rect_4 = $("#rect_4").get(0);
     
     if (checkBoundingBoxIntersect(player, rect_1)) {
         stopAnimation();
     } else if (checkBoundingBoxIntersect(player, rect_2)) {
         stopAnimation();
     } else if (checkBoundingBoxIntersect(player, rect_3)) {
+        stopAnimation();
+    } else if (checkBoundingBoxIntersect(player, rect_4)) {
         stopAnimation();
     } else {
         requestAnimationFrame(checkBulletCollision);
