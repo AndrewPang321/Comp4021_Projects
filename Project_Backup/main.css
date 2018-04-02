@@ -66,6 +66,34 @@ svg  { width: 100%; height: auto; }
     display: none;
 }
 
+.start {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  padding-top: 25vh;
+  text-align: center;
+  font-size: 8vh;
+  /* line-height: 100vh; */
+  background-color: rgba(0, 120, 200, 0.6);
+}
+.end
+{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  padding-top: 25vh;
+  text-align: center;
+  font-size: 8vh;
+  background-color: rgba(200, 0, 120, 0.6);
+}
+a:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
 #heart_1 {
     transform: translate(740px, -10px) scale(0.08, 0.08);
 }
