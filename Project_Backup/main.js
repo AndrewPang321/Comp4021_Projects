@@ -6,6 +6,8 @@ var spacePressed = false;
 var gameover = false;
 var bulletReload = false;   // The bullet can only be fired in every 2s
 var reloading;  // For storing the setInterval() in order to clear it
+var countdownNumberEl = document.getElementById('countdown-number');
+var countdown = 180;
 
 // Get back the current x-coordinate value in px
 function showStart()
@@ -293,6 +295,12 @@ $(document).ready(function() {
     //requestAnimationFrame(checkGameover);
 });
 
+//timer
+setInterval(function() {
+  countdown = --countdown <= 0 ? 10 : countdown;
+
+  document.getElementById("countdown-number").textContent = countdown;
+}, 1000);
 // function keyUpHandler(e) {
 //     if(event.keyCode == 39) {
 //         rightPressed = false;

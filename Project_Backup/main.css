@@ -65,6 +65,7 @@ svg  { width: 100%; height: auto; }
 #bullet {
     display: none;
 }
+
 .start {
   position: absolute;
   left: 0;
@@ -92,3 +93,35 @@ svg  { width: 100%; height: auto; }
 a:hover {
     background: rgba(255, 255, 255, 0.5);
 }
+
+#heart_1 {
+    transform: translate(740px, -10px) scale(0.08, 0.08);
+}
+
+#heart_2 {
+    transform: translate(700px, -10px) scale(0.08, 0.08);
+}
+
+#heart_3 {
+    transform: translate(660px, -10px) scale(0.08, 0.08);
+}
+
+
+svg circle {
+    stroke-dasharray: 113px;
+    stroke-dashoffset: 0px;
+    stroke-linecap: round;
+    stroke-width: 2px;
+    stroke: white;
+    fill: none;
+    animation: countdown 180s linear infinite forwards;
+  }
+
+  @keyframes countdown {
+    from {
+      stroke-dashoffset: 0px;
+    }
+    to {
+      stroke-dashoffset: 113px;
+    }
+  }
