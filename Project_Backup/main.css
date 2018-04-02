@@ -66,14 +66,41 @@ svg  { width: 100%; height: auto; }
     display: none;
 }
 
+@keyframes reduce-heart-1 {
+    0% { transform: translate(650px, -10px) scale(0.08, 0.08); }
+    50% { transform: translate(650px, -10px) scale(0.1, 0.1); }
+    100% { transform: translate(650px, -10px) scale(0.08, 0.08); }
+}
+
+@keyframes reduce-heart-2 {
+    0% { transform: translate(690px, -10px) scale(0.08, 0.08); }
+    50% { transform: translate(690px, -10px) scale(0.1, 0.1); }
+    100% { transform: translate(690px, -10px) scale(0.08, 0.08); }
+}
+
+@keyframes reduce-heart-3 {
+    0% { transform: translate(730px, -10px) scale(0.08, 0.08); }
+    50% { transform: translate(730px, -10px) scale(0.1, 0.1); }
+    100% { transform: translate(730px, -10px) scale(0.08, 0.08); }
+}
+
 #heart_1 {
-    transform: translate(740px, -10px) scale(0.08, 0.08);
+    animation-name: reduce-heart-1;
+    animation-duration: 3s;
+    animation-play-state: paused;
+    transform: translate(650px, -10px) scale(0.08, 0.08);
 }
 
 #heart_2 {
-    transform: translate(700px, -10px) scale(0.08, 0.08);
+    animation-name: reduce-heart-2;
+    animation-duration: 3s;
+    animation-play-state: paused;
+    transform: translate(690px, -10px) scale(0.08, 0.08);
 }
 
 #heart_3 {
-    transform: translate(660px, -10px) scale(0.08, 0.08);
+    animation-name: reduce-heart-3;
+    animation-duration: 3s;
+    animation-play-state: paused;
+    transform: translate(730px, -10px) scale(0.08, 0.08);
 }

@@ -6,6 +6,7 @@ var spacePressed = false;
 var gameover = false;
 var bulletReload = false;   // The bullet can only be fired in every 2s
 var reloading;  // For storing the setInterval() in order to clear it
+var lives = 3;  // Player's lives
 
 // Get back the current x-coordinate value in px
 function getComputedTranslateX(value)
@@ -154,6 +155,31 @@ function makeObstacle() {
     }, Math.random() * 2000);
 }
 
+function hideObstacleAndRestart(obstacle) {
+    // Hide Obstacle
+    obstacle.css("display", "none");
+    obstacle.css("animationPlayState", "paused");
+    // Restart animation after random seconds
+    setTimeout(function() {
+        restartAnimation(obstacle);
+    }, Math.random() * 3000);
+}
+
+function updateLives() {
+    // Collision happened, decrement number of available lives
+    lives--;
+    if (lives == 2) {
+        $("#life3").css("fill", "#a6a6a6");
+        $("#heart_3").css("animationPlayState", "running");
+    } else if (lives == 1) {
+        $("#life2").css("fill", "#a6a6a6");
+        $("#heart_2").css("animationPlayState", "running");
+    } else if (lives == 0) {
+        $("#life1").css("fill", "#a6a6a6");
+        $("#heart_1").css("animationPlayState", "running");
+    }
+}
+
 // Simple collision checking
 function checkBoundingBoxIntersect(obj1, obj2) {
     var obj1 = obj1.getBoundingClientRect();
@@ -226,13 +252,41 @@ function checkGameover() {
     var rect_4 = $("#rect_4").get(0);
     
     if (checkBoundingBoxIntersect(player, rect_1)) {
-        stopAnimation();
+        updateLives();
+        if (lives == 0) {
+            stopAnimation();
+        } else {
+            hideObstacleAndRestart($("#rect_1"));
+            requestAnimationFrame(checkBulletCollision);
+            requestAnimationFrame(checkGameover);
+        }
     } else if (checkBoundingBoxIntersect(player, rect_2)) {
-        stopAnimation();
+        updateLives();
+        if (lives == 0) {
+            stopAnimation();
+        } else {
+            hideObstacleAndRestart($("#rect_2"));
+            requestAnimationFrame(checkBulletCollision);
+            requestAnimationFrame(checkGameover);
+        }
     } else if (checkBoundingBoxIntersect(player, rect_3)) {
-        stopAnimation();
+        updateLives();
+        if (lives == 0) {
+            stopAnimation();
+        } else {
+            hideObstacleAndRestart($("#rect_3"));
+            requestAnimationFrame(checkBulletCollision);
+            requestAnimationFrame(checkGameover);
+        }
     } else if (checkBoundingBoxIntersect(player, rect_4)) {
-        stopAnimation();
+        updateLives();
+        if (lives == 0) {
+            stopAnimation();
+        } else {
+            hideObstacleAndRestart($("#rect_4"));
+            requestAnimationFrame(checkBulletCollision);
+            requestAnimationFrame(checkGameover);
+        }
     } else {
         requestAnimationFrame(checkBulletCollision);
         requestAnimationFrame(checkGameover);
