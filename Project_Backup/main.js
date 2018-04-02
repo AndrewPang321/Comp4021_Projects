@@ -6,12 +6,9 @@ var spacePressed = false;
 var gameover = false;
 var bulletReload = false;   // The bullet can only be fired in every 2s
 var reloading;  // For storing the setInterval() in order to clear it
-<<<<<<< HEAD
 var lives = 3;  // Player's lives
-=======
 var countdownNumberEl = document.getElementById('countdown-number');
 var countdown = 180;
->>>>>>> 81e84e9abe1f920bf8170ad004f6974c2550e31f
 
 // Get back the current x-coordinate value in px
 function showStart()
@@ -240,6 +237,7 @@ function stopAnimation() {
     $("#rect_4").css("animationPlayState", "paused");
     $("#bullet").pauseKeyframe();
     $("#bullet").css("display", "none");
+    clearInterval(timer);
     end();
 }
 
@@ -347,13 +345,14 @@ function checkGameover() {
 $(document).ready(function() {
     // Start the obstacle animation
     showStart();
+    // makeObstacle();
 
     // Start the game over checking
-    //requestAnimationFrame(checkGameover);
+    // requestAnimationFrame(checkGameover);
 });
 
 //timer
-setInterval(function() {
+timer = setInterval(function() {
   countdown = --countdown <= 0 ? 10 : countdown;
 
   document.getElementById("countdown-number").textContent = countdown;
