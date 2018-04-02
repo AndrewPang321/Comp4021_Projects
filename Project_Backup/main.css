@@ -65,3 +65,15 @@ svg  { width: 100%; height: auto; }
 #bullet {
     display: none;
 }
+
+#heart_1 {
+    transform: translate(740px, -10px) scale(0.08, 0.08);
+}
+
+#heart_2 {
+    transform: translate(700px, -10px) scale(0.08, 0.08);
+}
+
+#heart_3 {
+    transform: translate(660px, -10px) scale(0.08, 0.08);
+}
