@@ -30,13 +30,15 @@ function start()
 
         document.getElementById("countdown-number").textContent = countdown;
     }, 1000);
-    $("countdown-circle").css("animationPlayState", "running");
+    $("#countdown-circle").css("animationPlayState", "running");
     requestAnimationFrame(checkGameover);
     gameover = false;
 }
 function end()
 {
+    document.getElementById("gameScore").innerHTML = ("Your Score: " + score);
     document.getElementById("EndScreen").style.display="block";
+    $("#countdown-circle").css("animationPlayState", "paused");
     // // $("#rect_1").y=300;
     // // $("#rect_1").x=200;
     // // $("#rect_2").y=70;

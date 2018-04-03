@@ -132,15 +132,14 @@ a:hover {
     transform: translate(730px, -10px) scale(0.08, 0.08);
 }
 
-svg circle {
+#countdown-circle {
     stroke-dasharray: 113px;
     stroke-dashoffset: 0px;
     stroke-linecap: round;
     stroke-width: 2px;
     stroke: white;
     fill: none;
-    animation: countdown 180s linear infinite forwards;
-    animation-play-state: paused;
+    animation: countdown 180s linear infinite forwards paused;
   }
 
 @keyframes countdown {
