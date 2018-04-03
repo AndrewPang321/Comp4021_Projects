@@ -113,21 +113,21 @@ a:hover {
 
 #heart_1 {
     animation-name: reduce-heart-1;
-    animation-duration: 3s;
+    animation-duration: 2s;
     animation-play-state: paused;
     transform: translate(650px, -10px) scale(0.08, 0.08);
 }
 
 #heart_2 {
     animation-name: reduce-heart-2;
-    animation-duration: 3s;
+    animation-duration: 2s;
     animation-play-state: paused;
     transform: translate(690px, -10px) scale(0.08, 0.08);
 }
 
 #heart_3 {
     animation-name: reduce-heart-3;
-    animation-duration: 3s;
+    animation-duration: 2s;
     animation-play-state: paused;
     transform: translate(730px, -10px) scale(0.08, 0.08);
 }
@@ -145,4 +145,27 @@ a:hover {
 @keyframes countdown {
     from { stroke-dashoffset: 0px; }
     to { stroke-dashoffset: 113px; }
+}
+
+/* Set up the gameover animation */
+@keyframes gameover-animation {
+  from { transform: rotate(0deg); font-size: 1px; opacity: 0; }
+  to   { transform: rotate(1440deg); font-size: 80px; opacity: 1; }
+}
+
+#gameover {
+    font-family: Dosis, sans-serif;
+    animation-name: gameover-animation;
+    animation-duration: 3s;
+    animation-timing-function: linear;
+    animation-iteration-count: 1;
+    animation-play-state: paused;
+}
+
+#StartScreen {
+    font-family: Dosis, sans-serif;
+}
+
+#EndScreen {
+    font-family: Dosis, sans-serif;
 }

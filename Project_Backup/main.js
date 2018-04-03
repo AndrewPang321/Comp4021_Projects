@@ -249,6 +249,7 @@ function stopAnimation() {
     $("#bullet").pauseKeyframe();
     $("#bullet").css("display", "none");
     clearInterval(timer);
+    $("#gameover").css("animationPlayState", "running");
     end();
 }
 

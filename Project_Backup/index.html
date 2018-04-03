@@ -9,28 +9,6 @@
     <!-- This is the font returned from Google font -->
     <link href="https://fonts.googleapis.com/css?family=Dosis:700" rel="stylesheet">
     <link href="main.css" rel="stylesheet">
-
-    <style>
-    /* The container moves the text to the middle of the screen */
-    #gameover-container {
-        transform: translate(500px,200px);
-    }
-
-    /* Set up the gameover animation */
-    @keyframes gameover-animation {
-      from { transform: rotate(0deg); font-size: 1px; opacity: 0; }
-      to   { transform: rotate(1440deg); font-size: 80px; opacity: 1; }
-    }
-
-    #gameover {
-        font-family: Dosis, sans-serif;
-        animation-name: gameover-animation;
-        animation-duration: 5s;
-        animation-timing-function: linear;
-        animation-iteration-count: 1;
-        animation-play-state: paused;
-    }
-    </style>
 </head>
 <body>
     <!-- The Start Screen -->
@@ -39,7 +17,7 @@
         <a id="button" href="#" onclick="start()">Start Game!</a>
     </div>
     <div class="box end" id ="EndScreen">
-        <p>Game Over</p>
+        <p id="gameover">Game Over</p>
         <p id="gameScore"></p>
         <a id="button" href="#" onclick="reset()">Try again!</a>
     </div>
@@ -87,9 +65,9 @@
         </g>
 
         <!-- The game over text -->
-        <g id="gameover-container">
+        <!-- <g id="gameover-container">
             <text id="gameover" x="0" y="0" fill="red" font-size="80px" text-anchor="middle" style="display: none">Game Over</text>
-        </g>
+        </g> -->
 
         <g id="countdown">
             <circle id="countdown-circle" r="18" cx="20" cy="20"></circle>
