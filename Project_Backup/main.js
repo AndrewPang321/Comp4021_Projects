@@ -7,6 +7,7 @@ var gameover = false;
 var bulletReload = false;   // The bullet can only be fired in every 2s
 var reloading;  // For storing the setInterval() in order to clear it
 var lives = 3;  // Player's lives
+var score = 0;  // Game score
 var countdownNumberEl = document.getElementById('countdown-number');
 var countdown = 180;
 
@@ -21,14 +22,14 @@ function start()
     document.getElementById("StartScreen").style.display="none";
     document.getElementById("EndScreen").style.display="none";
     makeObstacle();
-    //timer
+    // Timer
     timer = setInterval(function() {
         countdown = --countdown <= 0 ? 10 : countdown;
 
         document.getElementById("countdown-number").textContent = countdown;
     }, 1000);
     requestAnimationFrame(checkGameover);
-    gameover=false;
+    gameover = false;
 }
 function end()
 {
@@ -273,27 +274,38 @@ function bulletObstacleCollisionAnimation(bullet, obstacle) {
     // Hide Bullet
     bullet.pauseKeyframe();
     bullet.css("display", "none");
-    // Restart animation after random seconds
-    setTimeout(function() {
-        restartAnimation(obstacle);
-    }, Math.random() * 2000);
+    restartAnimation(obstacle);
+    // setTimeout(function() {
+    //     restartAnimation(obstacle);
+    // }, Math.random() * 2000);
+}
+
+function updateScore() {
+    score += 5;
+    document.getElementById("score_number").textContent = score;
 }
 
 function checkBulletCollision() {
-    var bullet = $("#bullet").get(0);
-    var rect_1 = $("#rect_1").get(0);
-    var rect_2 = $("#rect_2").get(0);
-    var rect_3 = $("#rect_3").get(0);
-    var rect_4 = $("#rect_4").get(0);
+    if ($("#bullet").css("display") == "block") {
+        var bullet = $("#bullet").get(0);
+        var rect_1 = $("#rect_1").get(0);
+        var rect_2 = $("#rect_2").get(0);
+        var rect_3 = $("#rect_3").get(0);
+        var rect_4 = $("#rect_4").get(0);
 
-    if (checkBoundingBoxIntersect(bullet, rect_1)) {
-        bulletObstacleCollisionAnimation($("#bullet"), $("#rect_1"));
-    } else if (checkBoundingBoxIntersect(bullet, rect_2)) {
-        bulletObstacleCollisionAnimation($("#bullet"), $("#rect_2"));
-    } else if (checkBoundingBoxIntersect(bullet, rect_3)) {
-        bulletObstacleCollisionAnimation($("#bullet"), $("#rect_3"));
-    } else if (checkBoundingBoxIntersect(bullet, rect_4)) {
-        bulletObstacleCollisionAnimation($("#bullet"), $("#rect_4"));
+        if (checkBoundingBoxIntersect(bullet, rect_1)) {
+            bulletObstacleCollisionAnimation($("#bullet"), $("#rect_1"));
+            updateScore();
+        } else if (checkBoundingBoxIntersect(bullet, rect_2)) {
+            bulletObstacleCollisionAnimation($("#bullet"), $("#rect_2"));
+            updateScore();
+        } else if (checkBoundingBoxIntersect(bullet, rect_3)) {
+            bulletObstacleCollisionAnimation($("#bullet"), $("#rect_3"));
+            updateScore();
+        } else if (checkBoundingBoxIntersect(bullet, rect_4)) {
+            bulletObstacleCollisionAnimation($("#bullet"), $("#rect_4"));
+            updateScore();
+        }
     }
 }
 
