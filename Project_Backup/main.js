@@ -3,6 +3,7 @@ var leftPressed = false;
 var upPressed = false;
 var downPressed = false;
 var spacePressed = false;
+var gamestart = false;
 var gameover = false;
 var bulletReload = false;   // The bullet can only be fired in every 2s
 var reloading;  // For storing the setInterval() in order to clear it
@@ -19,6 +20,7 @@ function showStart()
 }
 function start()
 {
+    gamestart = true;
     document.getElementById("StartScreen").style.display="none";
     document.getElementById("EndScreen").style.display="none";
     makeObstacle();
@@ -73,7 +75,7 @@ function reset()
 document.addEventListener("keydown", keyDownHandler, false);
 // Handling the movement of up, down, left, right when key pressed
 function keyDownHandler(event) {
-    if (!gameover) {
+    if (!gameover && gamestart) {
         if (event.keyCode == 32) {
             spacePressed = true;
             console.log("space clicked");
