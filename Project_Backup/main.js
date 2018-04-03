@@ -30,6 +30,7 @@ function start()
 
         document.getElementById("countdown-number").textContent = countdown;
     }, 1000);
+    $("countdown-circle").css("animationPlayState", "running");
     requestAnimationFrame(checkGameover);
     gameover = false;
 }

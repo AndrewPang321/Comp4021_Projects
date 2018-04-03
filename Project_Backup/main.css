@@ -140,6 +140,7 @@ svg circle {
     stroke: white;
     fill: none;
     animation: countdown 180s linear infinite forwards;
+    animation-play-state: paused;
   }
 
 @keyframes countdown {
