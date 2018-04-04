@@ -107,6 +107,22 @@ svg  { width: 100%; height: auto; }
     font-size: 8vh;
     background-color: rgba(200, 0, 120, 0.6);
 }
+.intro
+{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  padding-top: 15vh;
+  text-align: center;
+  font-size: 5vh;
+  background-color: rgba(135, 206, 235, 0.6);
+}
+#smaller
+{
+  font-size: 3vh;
+}
 a:hover {
     background: rgba(255, 255, 255, 0.5);
 }
@@ -173,4 +189,34 @@ a:hover {
 #score_number {
     font-family: Dosis, sans-serif;
     font-size: 40px;
+}
+.st {
+  background-color: #d7d7d7;
+  box-shadow: 3px 5px 5px #888888;
+  border-radius: 2px;
+  transition: all 1s ease;
+  transform: scale(1);
+}
+.st:hover
+{
+  background-color: #000;
+  transform: scale(1.5) perspective(1px);
+  color: #fff;
+
+}
+
+.btn {
+  border-radius: 5px;
+  padding: 15px 55px;
+  font-size: 22px;
+  text-decoration: none;
+  margin: 20px;
+  position: relative;
+  display: inline-block;
+}
+
+.btn:active {
+  transform: translate(0px, 5px);
+  box-shadow: 0px 1px 0px 0px;
+
 }

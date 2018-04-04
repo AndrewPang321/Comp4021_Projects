@@ -32,6 +32,7 @@ function showStart()
 {
     document.getElementById("StartScreen").style.display="block";
     document.getElementById("EndScreen").style.display="none";
+    document.getElementById("IntroScreen").style.display="none";
 }
 function start()
 {
@@ -405,14 +406,28 @@ function checkGameover() {
     }
 }
 
+function instruction()
+{
+  document.getElementById("StartScreen").style.display="none";
+  document.getElementById("IntroScreen").style.display="block";
+}
+
+function returnToStart()
+{
+  document.getElementById("StartScreen").style.display="block";
+  document.getElementById("IntroScreen").style.display="none";
+}
+
 $(document).ready(function() {
     // Start the obstacle animation
     showStart();
+
     // makeObstacle();
 
     // Start the game over checking
     // requestAnimationFrame(checkGameover);
 });
+
 
 // function keyUpHandler(e) {
 //     if(event.keyCode == 39) {
