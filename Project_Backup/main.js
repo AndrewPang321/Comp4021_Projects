@@ -36,7 +36,10 @@ function showStart()
 function start()
 {
     gamestart = true;
-    document.getElementById("StartScreen").style.display="none";
+    document.getElementById("StartScreen").style.opacity=0;
+    setInterval(function(){
+        document.getElementById("StartScreen").style.display="none";
+    },5000);
     document.getElementById("EndScreen").style.display="none";
     makeObstacle();
     // Timer
@@ -52,7 +55,10 @@ function start()
 function end()
 {
     document.getElementById("gameScore").innerHTML = ("Your Score: " + score);
-    document.getElementById("EndScreen").style.display="block";
+    document.getElementById("EndScreen").style.opacity=1;
+    setInterval(function(){
+        document.getElementById("EndScreen").style.display="block";
+    },5000);
     $("#countdown-circle").css("animationPlayState", "paused");
     // // $("#rect_1").y=300;
     // // $("#rect_1").x=200;

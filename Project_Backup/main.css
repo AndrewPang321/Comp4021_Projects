@@ -164,13 +164,18 @@ a:hover {
 
 #StartScreen {
     font-family: Dosis, sans-serif;
+    transition-property: opacity ; 
+    transition-duration : 5s;
 }
 
 #EndScreen {
     font-family: Dosis, sans-serif;
+    transition-property: opacity ; 
+    transition-duration : 5s;
 }
 
 #score_number {
     font-family: Dosis, sans-serif;
     font-size: 40px;
+   
 }
