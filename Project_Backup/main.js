@@ -12,6 +12,21 @@ var score = 0;  // Game score
 var countdownNumberEl = document.getElementById('countdown-number');
 var countdown = 180;
 
+function playBulletCollisionSound() {
+    // $("#hit").pause();
+    // $("#hit").currentTime = 0;
+    // $("#hit").play();
+    $("audio")[1].play();
+}
+
+function playBulletSound() {
+    $("audio")[0].play();
+}
+
+function playloseLivesSound() {
+    $("audio")[2].play();
+}
+
 // Get back the current x-coordinate value in px
 function showStart()
 {
@@ -84,6 +99,7 @@ function keyDownHandler(event) {
             console.log("space clicked");
             // Check whether reload is completed
             if (!bulletReload) {
+                playBulletSound();
                 $('#player').css("transform", function(index, value) {
                     var transformX = getComputedTranslateX(value) + 65;
                     var transformY = getComputedTranslateY(value) + 30;
@@ -219,6 +235,7 @@ function hideObstacleAndRestart(obstacle) {
 function updateLives() {
     // Collision happened, decrement number of available lives
     lives--;
+    playloseLivesSound();
     if (lives == 2) {
         $("#life3").css("fill", "#a6a6a6");
         $("#heart_3").css("animationPlayState", "running");
@@ -289,6 +306,25 @@ function bulletObstacleCollisionAnimation(bullet, obstacle) {
 function updateScore() {
     score += 5;
     document.getElementById("score_number").textContent = score;
+    // Animation for updating the score
+    $.keyframe.define({
+        name: 'score-update',
+        '0%': {
+            'transform': 'scale(1, 1)'
+        },
+        '50%': {
+            'transform': 'scale(1.05, 1.05)'
+        },
+        '100%': {
+            'transform': 'scale(1, 1)'
+        }
+    });
+    // Run the dynamically-defined keyframe
+    $('#score_number').playKeyframe({
+        name: 'score-update',
+        duration: '1s',
+        fillMode: 'forwards'
+    });
 }
 
 function checkBulletCollision() {
@@ -300,15 +336,19 @@ function checkBulletCollision() {
         var rect_4 = $("#rect_4").get(0);
 
         if (checkBoundingBoxIntersect(bullet, rect_1)) {
+            playBulletCollisionSound();
             bulletObstacleCollisionAnimation($("#bullet"), $("#rect_1"));
             updateScore();
         } else if (checkBoundingBoxIntersect(bullet, rect_2)) {
+            playBulletCollisionSound();
             bulletObstacleCollisionAnimation($("#bullet"), $("#rect_2"));
             updateScore();
         } else if (checkBoundingBoxIntersect(bullet, rect_3)) {
+            playBulletCollisionSound();
             bulletObstacleCollisionAnimation($("#bullet"), $("#rect_3"));
             updateScore();
         } else if (checkBoundingBoxIntersect(bullet, rect_4)) {
+            playBulletCollisionSound();
             bulletObstacleCollisionAnimation($("#bullet"), $("#rect_4"));
             updateScore();
         }

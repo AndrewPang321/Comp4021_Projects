@@ -169,3 +169,8 @@ a:hover {
 #EndScreen {
     font-family: Dosis, sans-serif;
 }
+
+#score_number {
+    font-family: Dosis, sans-serif;
+    font-size: 40px;
+}
