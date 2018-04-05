@@ -55,9 +55,11 @@ function start()
     makeObstacle();
     // Timer
     timer = setInterval(function() {
-        countdown = --countdown <= 0 ? 10 : countdown;
-
+        countdown = --countdown <= 0 ? 0 : countdown;
         document.getElementById("countdown-number").textContent = countdown;
+        if (countdown == 0) {
+            stopAnimation();
+        }
     }, 1000);
     $("#countdown-circle").css("animationPlayState", "running");
     requestAnimationFrame(checkGameover);
