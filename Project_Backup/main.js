@@ -13,29 +13,42 @@ var countdownNumberEl = document.getElementById('countdown-number');
 var countdown = 180;
 
 function playBulletCollisionSound() {
-    // $("#hit").pause();
-    // $("#hit").currentTime = 0;
-    // $("#hit").play();
+    $("audio")[1].currentTime = 0;
     $("audio")[1].play();
 }
 
 function playBulletSound() {
+    $("audio")[0].currentTime = 0;
     $("audio")[0].play();
 }
 
 function playloseLivesSound() {
+    $("audio")[2].currentTime = 0;
     $("audio")[2].play();
+}
+
+function playBgStartSound() {
+    $("audio")[3].currentTime = 0;
+    $("audio")[3].play();
+}
+
+function playBgEndSound() {
+    $("audio")[4].currentTime = 0;
+    $("audio")[4].play();
 }
 
 // Get back the current x-coordinate value in px
 function showStart()
 {
+    playBgStartSound();
     document.getElementById("StartScreen").style.display="block";
     document.getElementById("EndScreen").style.display="none";
     document.getElementById("IntroScreen").style.display="none";
 }
 function start()
 {
+    $("audio")[3].pause();
+    $("audio")[4].pause();
     gamestart = true;
     document.getElementById("StartScreen").style.display="none";
     document.getElementById("EndScreen").style.display="none";
@@ -52,6 +65,7 @@ function start()
 }
 function end()
 {
+    playBgEndSound();
     document.getElementById("gameScore").innerHTML = ("Your Score: " + score);
     document.getElementById("EndScreen").style.display="block";
     $("#countdown-circle").css("animationPlayState", "paused");
