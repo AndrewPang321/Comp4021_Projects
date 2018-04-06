@@ -50,7 +50,10 @@ function start()
     $("audio")[3].pause();
     $("audio")[4].pause();
     gamestart = true;
-    document.getElementById("StartScreen").style.display="none";
+    document.getElementById("StartScreen").style.opacity=0;
+    setTimeout(function(){
+        document.getElementById("StartScreen").style.display="none";
+    },2000);
     document.getElementById("EndScreen").style.display="none";
     makeObstacle();
     // Timer
@@ -70,6 +73,9 @@ function end()
     playBgEndSound();
     document.getElementById("gameScore").innerHTML = ("Your Score: " + score);
     document.getElementById("EndScreen").style.display="block";
+    setTimeout(function() {
+        document.getElementById("EndScreen").style.opacity=1;
+    }, 500);
     $("#countdown-circle").css("animationPlayState", "paused");
     // // $("#rect_1").y=300;
     // // $("#rect_1").x=200;
