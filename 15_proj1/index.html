@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Block Survivor</title>
+    <title>Space Rocket</title>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="./Keyframes-jQuery.Keyframes-f383a7c/dist/jquery.keyframes.min.js"></script>
     <script src="main.js"></script>
@@ -14,14 +14,25 @@
     <!-- The Start Screen -->
     <div class="box start" id ="StartScreen">
         <p>Space Rocket</p>
-        <a id="button" href="#" onclick="start()">Start Game!</a>
+        <a id="button" class="st btn" href="#" onclick="start()">Start Game!</a>
+        <a id="button" class="st btn" href="#" onclick="instruction()">Instruction</a>
     </div>
     <div class="box end" id ="EndScreen">
         <p id="gameover">Game Over</p>
         <p id="gameScore"></p>
-        <a id="button" href="#" onclick="reset()">Try again!</a>
+        <a id="button" class="st btn" href="#" onclick="reset()">Try again!</a>
     </div>
+    <div class="box intro" id ="IntroScreen">
+        <p>Control the space rocket, doge and destroy</p>
+        <p>the Meteorite in 180s!</p>
+        <p id="smaller">press &#8593;: move upward</p>
+        <p id="smaller">press &#8595;: move downward</p>
+        <p id="smaller">press &#8592;: move backward</p>
+        <p id="smaller">press &#8594;: move forward</p>
+        <p id="smaller">press Space : fire bullet</p>
 
+        <a id="button" class="st btn" href="#" onclick="returnToStart()">Return</a>
+    </div>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
         <defs>
             <linearGradient y2="1" x2="0" id="sky">
@@ -77,13 +88,15 @@
         <g id="score">
             <text id="score_number" x="50%" y="9%" fill="white" font-size="20px" text-anchor="middle" style="display: block">0</text>
         </g>
-      
+
     </svg>
 
-    <audio id="shoot"><source src="Gun+Silencer.mp3" type="audio/mpeg"></audio>
-    <audio id="hit"><source src="Bomb+1.mp3" type="audio/mpeg"></audio>
-    <audio id="loseHeart"><source src="applause.mp3" type="audio/mpeg"></audio>
-  
+    <audio id="shoot"><source src="sounds/Gun+Silencer.mp3" type="audio/mpeg"></audio>
+    <audio id="hit"><source src="sounds/Bomb+1.mp3" type="audio/mpeg"></audio>
+    <audio id="loseHeart"><source src="sounds/applause.mp3" type="audio/mpeg"></audio>
+    <audio id="bgStart"><source src="sounds/Fantasy_Game_Background_Looping.mp3" type="audio/mpeg"></audio>
+    <audio id="bgEnd"><source src="sounds/City-Beneath-the-Waves_Looping.mp3" type="audio/mpeg"></audio>
+
     </body>
-    
+
 </html>

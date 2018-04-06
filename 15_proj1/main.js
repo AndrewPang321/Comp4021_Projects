@@ -13,40 +13,56 @@ var countdownNumberEl = document.getElementById('countdown-number');
 var countdown = 180;
 
 function playBulletCollisionSound() {
-    // $("#hit").pause();
-    // $("#hit").currentTime = 0;
-    // $("#hit").play();
+    $("audio")[1].currentTime = 0;
     $("audio")[1].play();
 }
 
 function playBulletSound() {
+    $("audio")[0].currentTime = 0;
     $("audio")[0].play();
 }
 
 function playloseLivesSound() {
+    $("audio")[2].currentTime = 0;
     $("audio")[2].play();
+}
+
+function playBgStartSound() {
+    $("audio")[3].currentTime = 0;
+    $("audio")[3].play();
+}
+
+function playBgEndSound() {
+    $("audio")[4].currentTime = 0;
+    $("audio")[4].play();
 }
 
 // Get back the current x-coordinate value in px
 function showStart()
 {
+    playBgStartSound();
     document.getElementById("StartScreen").style.display="block";
     document.getElementById("EndScreen").style.display="none";
+    document.getElementById("IntroScreen").style.display="none";
 }
 function start()
 {
+    $("audio")[3].pause();
+    $("audio")[4].pause();
     gamestart = true;
     document.getElementById("StartScreen").style.opacity=0;
-    setInterval(function(){
+    setTimeout(function(){
         document.getElementById("StartScreen").style.display="none";
-    },5000);
+    },2000);
     document.getElementById("EndScreen").style.display="none";
     makeObstacle();
     // Timer
     timer = setInterval(function() {
-        countdown = --countdown <= 0 ? 10 : countdown;
-
+        countdown = --countdown <= 0 ? 0 : countdown;
         document.getElementById("countdown-number").textContent = countdown;
+        if (countdown == 0) {
+            stopAnimation();
+        }
     }, 1000);
     $("#countdown-circle").css("animationPlayState", "running");
     requestAnimationFrame(checkGameover);
@@ -54,11 +70,12 @@ function start()
 }
 function end()
 {
+    playBgEndSound();
     document.getElementById("gameScore").innerHTML = ("Your Score: " + score);
-    document.getElementById("EndScreen").style.opacity=1;
-    setInterval(function(){
-        document.getElementById("EndScreen").style.display="block";
-    },5000);
+    document.getElementById("EndScreen").style.display="block";
+    setTimeout(function() {
+        document.getElementById("EndScreen").style.opacity=1;
+    }, 500);
     $("#countdown-circle").css("animationPlayState", "paused");
     // // $("#rect_1").y=300;
     // // $("#rect_1").x=200;
@@ -411,14 +428,28 @@ function checkGameover() {
     }
 }
 
+function instruction()
+{
+  document.getElementById("StartScreen").style.display="none";
+  document.getElementById("IntroScreen").style.display="block";
+}
+
+function returnToStart()
+{
+  document.getElementById("StartScreen").style.display="block";
+  document.getElementById("IntroScreen").style.display="none";
+}
+
 $(document).ready(function() {
     // Start the obstacle animation
     showStart();
+
     // makeObstacle();
 
     // Start the game over checking
     // requestAnimationFrame(checkGameover);
 });
+
 
 // function keyUpHandler(e) {
 //     if(event.keyCode == 39) {
