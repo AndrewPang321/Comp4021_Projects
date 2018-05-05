@@ -19,6 +19,7 @@ if (!array_key_exists($_SESSION["username"], $users)) {
 }
 // Read the first name of the user
 $firstname = $users[$_SESSION["username"]]["firstname"];
+$username = $_SESSION["username"];
 
 ?>
 <!DOCTYPE html>
@@ -33,7 +34,40 @@ $firstname = $users[$_SESSION["username"]]["firstname"];
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css">
     <script>
+        function paginationHandler() {
+            // store pagination container so we only select it once
+            var $paginationContainer = $(".pagination-container"),
+                $pagination = $paginationContainer.find('.pagination ul');
+            // click event
+            $pagination.find("li a").on('click.pageChange', function(e) {
+                e.preventDefault();
+                // get parent li's data-page attribute and current page
+                var parentLiPage = $(this).parent('li').data("page"),
+                currentPage = parseInt( $(".pagination-container div[data-page]:visible").data('page') ),
+                numPages = $paginationContainer.find("div[data-page]").length;
+                // make sure they aren't clicking the current page
+                if ( parseInt(parentLiPage) !== parseInt(currentPage) ) {
+                    // hide the current page
+                    $paginationContainer.find("div[data-page]:visible").hide();
+                    // console.log($paginationContainer.find("#listContent").find("div[data-page]:visible"));
+                    if ( parentLiPage === '+' ) {
+                        // next page
+                        $paginationContainer.find("div[data-page="+( currentPage+1>numPages ? numPages : currentPage+1 )+"]").show();
+                    } else if ( parentLiPage === '-' ) {
+                        // previous page
+                        $paginationContainer.find("div[data-page="+( currentPage-1<1 ? 1 : currentPage-1 )+"]").show();
+                    } else {
+                        // specific page
+                        $paginationContainer.find("div[data-page="+parseInt(parentLiPage)+"]").show();
+                    }
+                }
+            });
+        };
+
         $(document).ready(function() {
+            // Pagination
+            paginationHandler();
+
             // This is the hashchange event function
             $(window).on('hashchange', function() {
                 // Get the fragment identifier from the URL
@@ -57,16 +91,33 @@ $firstname = $users[$_SESSION["username"]]["firstname"];
             // You may want to trigger the hashchange event when the page loads
             $(window).trigger("hashchange");
 
-            $.get("list.php", "", (data) => {
-                var index = 0;
-                var html = "<div class='row'>";
-                for (let key in data) {
-                    html += "<div class='item col-4 col-md-3 col-lg-2 mr-4'>";
-                    if (data[key]["image"] != "") {
-                        html += "<div class='image'><img src='" + data[key]["image"] + "' class='w-100 p-1 mt-5 mb-3' alt='Image'></div>";
+            // Get php $username variable
+            var username = "<?= $username ?>";
+            query = "?username=" + encodeURIComponent(username);
+            $.get("list.php", query, (data) => {
+                var index = 0;  // For 5 items per page
+                var pageNo = 1; // Initial page number
+                var html;
+                // console.log(data.contents);
+                for (let key in data.contents) {
+                    if (index % 5 === 0) {
+                        if (index === 0) {
+                            // First page will always be displayed
+                            html = "<div data-page='" + pageNo + "'>";
+                        } else {
+                            // Hide other pages
+                            html += "<div data-page='" + pageNo + "' style='display:none;'>";
+                        }
+                        html += "<div class='row'>";
+                        pageNo++;
                     }
-                    html += "<div class='name'>" + data[key]["name"] + "</div>";
-                    html += "<div class='year pb-1'>" + data[key]["year"] + "</div>";
+                    index++;
+                    html += "<div class='item col-4 col-md-3 col-lg-2 mr-4'>";
+                    if (data.contents[key]["image"] != "") {
+                        html += "<div class='image'><img src='" + data.contents[key]["image"] + "' class='w-100 p-1 mt-5 mb-3' alt='Image'></div>";
+                    }
+                    html += "<div class='name'>" + data.contents[key]["name"] + "</div>";
+                    html += "<div class='year pb-1'>" + data.contents[key]["year"] + "</div>";
                     html += "<div class='row btn-group'>";
                     html += "<div class='edit pr-2'><button class='btn-sm btn-info'><i class='fas fa-edit'></i> <small>Edit</small></button></div>";
                     html += "<div class='delete'><button class='btn-sm btn-danger'><i class='fas fa-trash-alt'></i> <small>Delete</small></button></div>";
@@ -81,12 +132,21 @@ $firstname = $users[$_SESSION["username"]]["firstname"];
                     // html += "</div>";
 
                     html += "</div>";
+                    if (index % 5 === 0) {
+                        // Close row and data-page div
+                        html += "</div>";
+                        html += "</div>";
+                    }
 
-                    console.log(key, data[key]);
-                    index++;
+                    console.log(key, data.contents[key]);
                 }
                 html += "</div>";
+
+                if (data.contents === null) {
+                    html = "<h4 class='mt-5'>You currently have no contents!</h4>";
+                }
                 $("#listContent").html(html);
+                // console.log(html);
             }).fail(function() {
                 alert("Unknown error!");
             }, "json");
@@ -145,19 +205,39 @@ $firstname = $users[$_SESSION["username"]]["firstname"];
     <!-- List Page (with Delete) -->
     <div id="listPage" class="container page pt-3 pb-3" style="display: none">
         <!-- This is the div for showing the item list -->
-        <div id="listContent"></div>
-        
-        <br><br>
-        <nav aria-label="Page Navigation">
-            <ul class="pagination justify-content-end">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            </ul>
-        </nav>
+        <!-- <div id="listContent"></div> -->
+        <div class="pagination-container">
+            <div id="listContent"></div>
+            <!-- <div data-page="1" >
+                <p>Content for Div Number 1</p>
+            </div>
+            <div data-page="2" style="display:none;">
+                <p>Content for Div Number 2</p>
+            </div>
+            <div data-page="3" style="display:none;">
+                <p>Content for Div Number 3</p>
+            </div>
+            <div data-page="4" style="display:none;">
+                <p>Content for Div Number 4</p>
+            </div>
+            <div data-page="5" style="display:none;">
+                <p>Content for Div Number 5</p>
+            </div> -->
+            <br><br>
+            <nav aria-label="Page Navigation">
+                <div class="pagination justify-content-end">
+                    <ul class="pagination">
+                        <li class="page-item" data-page="-"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item active" data-page="1"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item" data-page="2"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item" data-page="3"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item" data-page="+"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
     </div>
+
     <!-- Edit Page -->
     <div id="editPage" class="container page pt-3 pb-3" style="display: none">
         Edit
