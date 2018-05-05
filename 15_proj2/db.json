@@ -1,0 +1,27 @@
+{
+    "users": [
+        {
+            "andrew": {
+                "firstname": "andrew",
+                "lastname": "pang",
+                "password": "andrew"
+            },
+            "jack": {
+                "firstname": "jack",
+                "lastname": "ng",
+                "password": "jack"
+            },
+            "jay": {
+                "firstname": "jay",
+                "lastname": "siu",
+                "password": "jay"
+            },
+            "travis": {
+                "firstname": "travis",
+                "lastname": "tang",
+                "password": "travis"
+            }
+        }
+    ],
+    "contents": []
+}
