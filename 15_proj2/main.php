@@ -38,6 +38,7 @@ $username = $_SESSION["username"];
             // store pagination container so we only select it once
             var $paginationContainer = $(".pagination-container"),
                 $pagination = $paginationContainer.find('.pagination ul');
+
             // click event
             $pagination.find("li a").on('click.pageChange', function(e) {
                 e.preventDefault();
@@ -53,21 +54,34 @@ $username = $_SESSION["username"];
                     if ( parentLiPage === '+' ) {
                         // next page
                         $paginationContainer.find("div[data-page="+( currentPage+1>numPages ? numPages : currentPage+1 )+"]").show();
+                        $pagination.find("li[data-page="+currentPage+"]").attr("class", "page-item");
+                        $pagination.find("li[data-page="+( currentPage+1>numPages ? numPages : currentPage+1 )+"]").attr("class", "page-item active");
                     } else if ( parentLiPage === '-' ) {
                         // previous page
                         $paginationContainer.find("div[data-page="+( currentPage-1<1 ? 1 : currentPage-1 )+"]").show();
+                        $pagination.find("li[data-page="+currentPage+"]").attr("class", "page-item");
+                        $pagination.find("li[data-page="+( currentPage-1<1 ? 1 : currentPage-1 )+"]").attr("class", "page-item active");
                     } else {
                         // specific page
                         $paginationContainer.find("div[data-page="+parseInt(parentLiPage)+"]").show();
+                        $pagination.find("li[data-page="+currentPage+"]").attr("class", "page-item");
+                        $pagination.find("li[data-page="+parseInt(parentLiPage)+"]").attr("class", "page-item active");
                     }
                 }
             });
         };
 
-        $(document).ready(function() {
-            // Pagination
-            paginationHandler();
+        function createPagination(totalPage) {
+            var html = "";
+            for (let i = 1; i < totalPage; i++) {
+                let pageNo = i+1;
+                html += "<li class='page-item' data-page='" + pageNo + "'><a class='page-link' href='#'>" + pageNo + "</a></li>"; 
+            }
+            $(".pagination li:nth-child(2)").after(html);
+            // console.log(html);
+        }
 
+        $(document).ready(function() {
             // This is the hashchange event function
             $(window).on('hashchange', function() {
                 // Get the fragment identifier from the URL
@@ -148,6 +162,11 @@ $username = $_SESSION["username"];
                 }
                 $("#listContent").html(html);
                 // console.log(html);
+
+                // Dynamically create pagination nav bar
+                createPagination($(".pagination-container #listContent div[data-page]").length);
+                // Pagination which handles on clickPageChange
+                paginationHandler();
             }).fail(function() {
                 alert("Unknown error!");
             }, "json");
@@ -206,32 +225,16 @@ $username = $_SESSION["username"];
     <!-- List Page (with Delete) -->
     <div id="listPage" class="container page pt-3 pb-3" style="display: none">
         <!-- This is the div for showing the item list -->
-        <!-- <div id="listContent"></div> -->
         <div class="pagination-container">
             <div id="listContent"></div>
-            <!-- <div data-page="1" >
-                <p>Content for Div Number 1</p>
-            </div>
-            <div data-page="2" style="display:none;">
-                <p>Content for Div Number 2</p>
-            </div>
-            <div data-page="3" style="display:none;">
-                <p>Content for Div Number 3</p>
-            </div>
-            <div data-page="4" style="display:none;">
-                <p>Content for Div Number 4</p>
-            </div>
-            <div data-page="5" style="display:none;">
-                <p>Content for Div Number 5</p>
-            </div> -->
             <br><br>
-            <nav aria-label="Page Navigation">
+            <nav id="pageNav" aria-label="Page Navigation">
                 <div class="pagination justify-content-end">
                     <ul class="pagination">
                         <li class="page-item" data-page="-"><a class="page-link" href="#">Previous</a></li>
-                        <li class="page-item active" data-page="1"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item" data-page="2"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item" data-page="3"><a class="page-link" href="#">3</a></li>
+                        <li id="firstPage" class="page-item active" data-page="1"><a class="page-link" href="#">1</a></li>
+                        <!-- <li class="page-item" data-page="2"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item" data-page="3"><a class="page-link" href="#">3</a></li> -->
                         <li class="page-item" data-page="+"><a class="page-link" href="#">Next</a></li>
                     </ul>
                 </div>
@@ -251,30 +254,5 @@ $username = $_SESSION["username"];
     <div id="profilePage" class="container page pt-3 pb-3" style="display: none">
         Profile
     </div>
-
-
-  <!-- <div class="container">
-    <div class="row">
-      <div class="col p-3 text-center">
-        <h4>Main Page</h4>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col text-center mb-3">
-        <i class="far fa-smile"></i>
-        Hi, <?= htmlspecialchars($firstname) ?>!
-      </div>
-    </div>
-    <div class="row">
-
-      <div class="col">
-        <form id="signoutForm" action="signout.php">
-          <div class="form-group text-center p-2">
-            <button type="submit" class="btn btn-primary"><i class="fas fa-sign-out-alt mr-2"></i> Sign Out</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div> -->
 </body>
 </html>
