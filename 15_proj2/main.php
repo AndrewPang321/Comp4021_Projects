@@ -145,6 +145,9 @@ $username = $_SESSION["username"];
                     case "#add":
                         $("#addPage").show();
                         break;
+                    case "#edit":
+                        $("#editPage").show();
+                        break;
                     case "#profile":
                         $("#profilePage").show();
                         break;
@@ -225,6 +228,18 @@ $username = $_SESSION["username"];
                 createPagination($(".pagination-container #listContent div[data-page]").length);
                 // Pagination which handles on clickPageChange
                 paginationHandler();
+
+                $("#listContent .edit").on("click", function() {
+                    window.location = url + "#edit";
+                    var movieTitle = $(this).parent().parent().find(".name").text();
+                    var movieYear = $(this).parent().parent().find(".year").text();
+                    var moviePoster = $(this).parent().parent().find(".image img").attr("src");
+                    $("#itemName").val(movieTitle);
+                    $("#itemYear").val(movieYear);
+                    $("#itemPoster").val(moviePoster);
+                    $("#reservedPoster").html("<label><img src='" + moviePoster + "' class='w-25 p-1 mt-1 mb-1' alt='Image'></label>");
+                    return false;
+                });
             }).fail(function() {
                 alert("Unknown error!");
             }, "json");
@@ -290,6 +305,18 @@ $username = $_SESSION["username"];
                         createPagination($(".pagination-container #listContent div[data-page]").length);
                         // Pagination which handles on clickPageChange
                         paginationHandler();
+
+                        $("#listContent .edit").on("click", function() {
+                            window.location = url + "#edit";
+                            var movieTitle = $(this).parent().parent().find(".name").text();
+                            var movieYear = $(this).parent().parent().find(".year").text();
+                            var moviePoster = $(this).parent().parent().find(".image img").attr("src");
+                            $("#itemName").val(movieTitle);
+                            $("#itemYear").val(movieYear);
+                            $("#itemPoster").val(moviePoster);
+                            $("#reservedPoster").html("<label><img src='" + moviePoster + "' class='w-25 p-1 mt-1 mb-1' alt='Image'></label>");
+                            return false;
+                        });
                     }).fail(function() {
                         alert("Unknown error!");
                     }, "json");
@@ -318,6 +345,24 @@ $username = $_SESSION["username"];
 
         .navbar {
             min-height: 65px;
+        }
+
+        .editForm {
+            width: 100%;
+            max-width: 850px;
+            padding: 15px;
+            margin: auto;
+        }
+
+        .editForm .form-control {
+            position: relative;
+            box-sizing: border-box;
+            height: auto;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .editForm .form-control:focus {
+            z-index: 2;
         }
     </style>
 </head>
@@ -402,8 +447,6 @@ $username = $_SESSION["username"];
                         <ul class="pagination">
                             <li class="page-item" data-page="-"><a class="page-link" href="#">Previous</a></li>
                             <li id="firstPage" class="page-item active" data-page="1"><a class="page-link" href="#">1</a></li>
-                            <!-- <li class="page-item" data-page="2"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item" data-page="3"><a class="page-link" href="#">3</a></li> -->
                             <li class="page-item" data-page="+"><a class="page-link" href="#">Next</a></li>
                         </ul>
                     </div>
@@ -414,7 +457,24 @@ $username = $_SESSION["username"];
 
     <!-- Edit Page -->
     <div id="editPage" class="container page pt-3 pb-3" style="display: none">
-        Edit
+        <form class="editForm">
+            <div class="form-row">
+                <div class="col-6 form-group">
+                    <label for="itemName">Movie Title</label>
+                    <input type="text" class="form-control" id="itemName" placeholder="Enter movie title">
+                </div>
+                <div class="col-6 form-group">
+                    <label for="itemYear">Movie Year</label>
+                    <input type="text" class="form-control" id="itemYear" placeholder="Enter movie year">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="itemPoster">Movie Poster</label>
+                <div id="reservedPoster"></div>
+                <input type="text" class="form-control" id="itemPoster" placeholder="Enter movie poster url">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
     </div>
     <!-- Add Page -->
     <div id="addPage" class="container page pt-3 pb-3" style="display: none">
