@@ -82,6 +82,13 @@ $username = $_SESSION["username"];
             // console.log(html);
         }
 
+        function deletePagination(totalPage) {
+            for (let i = 1; i < totalPage; i++) {
+                $(".pagination li:nth-child(2)").next().remove();
+            }
+            $(".pagination li:nth-child(2)").addClass("page-item active");
+        }
+
         $(document).ready(function() {
             /*** For Sorting and Searching ***/
             // Construct the URL without the query string
@@ -94,7 +101,6 @@ $username = $_SESSION["username"];
                 pairs[i] = pairs[i].split("=");
                 params[pairs[i][0]] = pairs[i][1];
             }
-            console.log(params);
             // Set up the event handlers
             $("#sort-by-title").on("click", function() {
                 window.location = url + "?orderby=title" + (params["s"]? "&s=" + params["s"] : "");
@@ -160,49 +166,53 @@ $username = $_SESSION["username"];
                 var index = 0;  // For 5 items per page
                 var pageNo = 1; // Initial page number
                 var html;
-                // console.log(data.contents);
-                for (let key in data.contents) {
-                    if (index % 5 === 0) {
-                        if (index === 0) {
-                            // First page will always be displayed
-                            html = "<div data-page='" + pageNo + "'>";
-                        } else {
-                            // Hide other pages
-                            html += "<div data-page='" + pageNo + "' style='display:none;'>";
+                console.log(data.contents);
+                if (Object.keys(data.contents).length === 0 && data.contents.constructor === Object) {
+                    html = "<h4 class='mt-5 mb-5'>No search result is found!</h4>";
+                } else {
+                    for (let key in data.contents) {
+                        if (index % 5 === 0) {
+                            if (index === 0) {
+                                // First page will always be displayed
+                                html = "<div data-page='" + pageNo + "'>";
+                            } else {
+                                // Hide other pages
+                                html += "<div data-page='" + pageNo + "' style='display:none;'>";
+                            }
+                            html += "<div class='row'>";
+                            pageNo++;
                         }
-                        html += "<div class='row'>";
-                        pageNo++;
-                    }
-                    index++;
-                    html += "<div class='item col-4 col-md-3 col-lg-2 mr-4'>";
-                    if (data.contents[key]["image"] != "") {
-                        html += "<div class='image'><img src='" + data.contents[key]["image"] + "' class='w-100 p-1 mt-5 mb-3' alt='Image'></div>";
-                    }
-                    html += "<div class='name'>" + data.contents[key]["name"] + "</div>";
-                    html += "<div class='year pb-1'>" + data.contents[key]["year"] + "</div>";
-                    html += "<div class='row btn-group'>";
-                    html += "<div class='edit pr-2'><button class='btn-sm btn-info'><i class='fas fa-edit'></i> <small>Edit</small></button></div>";
-                    html += "<div class='delete'><button class='btn-sm btn-danger'><i class='fas fa-trash-alt'></i> <small>Delete</small></button></div>";
-                    html += "</div>";
-                    
-                    // html += "<div class='types'>";
-                    // for (let type in data[key]["genre"]) {
-                    //     if (type > 0) html += ", ";
-                    //     html += "<span class='type'>" + data[key]["genre"][type] + "</span>";
-                    //     // console.log(data[key]["genre"][type]);
-                    // }
-                    // html += "</div>";
-
-                    html += "</div>";
-                    if (index % 5 === 0) {
-                        // Close row and data-page div
+                        index++;
+                        html += "<div class='item col-4 col-md-3 col-lg-2 mr-4'>";
+                        if (data.contents[key]["image"] != "") {
+                            html += "<div class='image'><img src='" + data.contents[key]["image"] + "' class='w-100 p-1 mt-5 mb-3' alt='Image'></div>";
+                        }
+                        html += "<div class='name'>" + data.contents[key]["name"] + "</div>";
+                        html += "<div class='year pb-1'>" + data.contents[key]["year"] + "</div>";
+                        html += "<div class='row btn-group'>";
+                        html += "<div class='edit pr-2'><button class='btn-sm btn-info'><i class='fas fa-edit'></i> <small>Edit</small></button></div>";
+                        html += "<div class='delete'><button class='btn-sm btn-danger' data-toggle='modal' data-target='#deleteModal'><i class='fas fa-trash-alt'></i> <small>Delete</small></button></div>";
                         html += "</div>";
-                        html += "</div>";
-                    }
+                        
+                        // html += "<div class='types'>";
+                        // for (let type in data[key]["genre"]) {
+                        //     if (type > 0) html += ", ";
+                        //     html += "<span class='type'>" + data[key]["genre"][type] + "</span>";
+                        //     // console.log(data[key]["genre"][type]);
+                        // }
+                        // html += "</div>";
 
-                    console.log(key, data.contents[key]);
+                        html += "</div>";
+                        if (index % 5 === 0) {
+                            // Close row and data-page div
+                            html += "</div>";
+                            html += "</div>";
+                        }
+
+                        console.log(key, data.contents[key]);
+                    }
+                    html += "</div>";
                 }
-                html += "</div>";
 
                 if (data.contents == "") {
                     html = "<h4 class='mt-5 mb-5'>You currently have no contents!</h4>";
@@ -218,6 +228,76 @@ $username = $_SESSION["username"];
             }).fail(function() {
                 alert("Unknown error!");
             }, "json");
+            $('#deleteModal').on('shown.bs.modal', function(e) {
+                $('#deleteModal').trigger('focus')
+                // Get the item name
+                var name = $(e.relatedTarget).parent().parent().parent().find(".name").text();
+                // Update Modal's text
+                $("#deleteModal h5").text("Delete \"" + name + "\"");
+                $("#deleteModal span").text("Are you sure to delete \"" + name + "\" permanently?");
+                $("#deleteItem").on("click", function() {
+                    var originalTotalPage = $(".pagination-container #listContent div[data-page]").length;
+                    $('#deleteModal').modal('hide');
+                    query += "&key=" + encodeURIComponent(name);
+                    // Handle the deletion from db.json
+                    $.get("delete.php", query, (data) => {
+                        var index = 0;  // For 5 items per page
+                        var pageNo = 1; // Initial page number
+                        var html;
+                        // console.log(data.contents);
+                        if (Object.keys(data.contents).length === 0 && data.contents.constructor === Object) {
+                            html = "<h4 class='mt-5 mb-5'>No search result is found!</h4>";
+                        } else {
+                            for (let key in data.contents) {
+                                if (index % 5 === 0) {
+                                    if (index === 0) {
+                                        // First page will always be displayed
+                                        html = "<div data-page='" + pageNo + "'>";
+                                    } else {
+                                        // Hide other pages
+                                        html += "<div data-page='" + pageNo + "' style='display:none;'>";
+                                    }
+                                    html += "<div class='row'>";
+                                    pageNo++;
+                                }
+                                index++;
+                                html += "<div class='item col-4 col-md-3 col-lg-2 mr-4'>";
+                                if (data.contents[key]["image"] != "") {
+                                    html += "<div class='image'><img src='" + data.contents[key]["image"] + "' class='w-100 p-1 mt-5 mb-3' alt='Image'></div>";
+                                }
+                                html += "<div class='name'>" + data.contents[key]["name"] + "</div>";
+                                html += "<div class='year pb-1'>" + data.contents[key]["year"] + "</div>";
+                                html += "<div class='row btn-group'>";
+                                html += "<div class='edit pr-2'><button class='btn-sm btn-info'><i class='fas fa-edit'></i> <small>Edit</small></button></div>";
+                                html += "<div class='delete'><button class='btn-sm btn-danger' data-toggle='modal' data-target='#deleteModal'><i class='fas fa-trash-alt'></i> <small>Delete</small></button></div>";
+                                html += "</div>";
+                                html += "</div>";
+                                if (index % 5 === 0) {
+                                    // Close row and data-page div
+                                    html += "</div>";
+                                    html += "</div>";
+                                }
+
+                                console.log(key, data.contents[key]);
+                            }
+                            html += "</div>";
+                        }
+                        $("#listContent").html(html);
+                        // console.log(html);
+
+                        // Dynamically create pagination nav bar
+                        deletePagination(originalTotalPage);
+                        createPagination($(".pagination-container #listContent div[data-page]").length);
+                        // Pagination which handles on clickPageChange
+                        paginationHandler();
+                    }).fail(function() {
+                        alert("Unknown error!");
+                    }, "json");
+                    // Delete the item from DOM
+                    $(e.relatedTarget).parent().parent().parent().remove();
+                    return false;
+                });
+            });
         });
     </script>
     <style>
@@ -242,6 +322,25 @@ $username = $_SESSION["username"];
     </style>
 </head>
 <body class="text-center">
+    <!-- Modal for delete -->
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <span>Are you sure to delete this item permanently?<span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="deleteItem" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(87, 99, 102);">
         <a class="navbar-brand" href="#">COMP4021 Group 15</a>
@@ -295,7 +394,7 @@ $username = $_SESSION["username"];
 
         <!-- This is the div for showing the item list -->
         <div class="row">
-            <div class="pagination-container">
+            <div class="pagination-container col-12">
                 <div id="listContent"></div>
                 <br><br>
                 <nav id="pageNav" aria-label="Page Navigation">
