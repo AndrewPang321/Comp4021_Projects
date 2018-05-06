@@ -31,7 +31,8 @@ $username = $_SESSION["username"];
           content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"> 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css">
     <script>
         function paginationHandler() {
@@ -82,6 +83,47 @@ $username = $_SESSION["username"];
         }
 
         $(document).ready(function() {
+            /*** For Sorting and Searching ***/
+            // Construct the URL without the query string
+            var url = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            // Find the query string and parameters
+            var qstring = window.location.search.substring(1);
+            var pairs = qstring.split("&");
+            var params = {};
+            for (var i = 0; i < pairs.length; i++) {
+                pairs[i] = pairs[i].split("=");
+                params[pairs[i][0]] = pairs[i][1];
+            }
+            console.log(params);
+            // Set up the event handlers
+            $("#sort-by-title").on("click", function() {
+                window.location = url + "?orderby=title" + (params["s"]? "&s=" + params["s"] : "");
+                return false;
+            });
+            $("#sort-by-year").on("click", function() {
+                window.location = url + "?orderby=year" + (params["s"]? "&s=" + params["s"] : "");
+                return false;
+            });
+            $("#reset-sort-order").on("click", function() {
+                window.location = url + (params["s"]? "?s=" + params["s"] : "");
+                return false;
+            });
+            $("#search-button").on("click", function() {
+                var search = $("#search-box").val().trim();
+                if (search != "") {
+                    window.location = url + "?s=" + search + (params["orderby"]? "&orderby=" + params["orderby"] : "");
+                }
+                return false;
+            });
+            $("#clear-button").on("click", function() {
+                window.location = url + (params["orderby"]? "?orderby=" + params["orderby"] : "");
+                return false;
+            });
+            $("#clear-all-button").on("click", function() {
+                window.location = url;
+                return false;
+            });
+
             // This is the hashchange event function
             $(window).on('hashchange', function() {
                 // Get the fragment identifier from the URL
@@ -107,7 +149,13 @@ $username = $_SESSION["username"];
 
             // Get php $username variable
             var username = "<?= $username ?>";
-            query = "?username=" + encodeURIComponent(username);
+            query = "username=" + encodeURIComponent(username);
+            if (params["orderby"] != null) {
+                query += "&orderby=" + encodeURIComponent(params["orderby"]);
+            }
+            if (params["s"] != null && params["s"] != "") {
+                query += "&s=" + encodeURIComponent(params["s"]);
+            }
             $.get("list.php", query, (data) => {
                 var index = 0;  // For 5 items per page
                 var pageNo = 1; // Initial page number
@@ -224,21 +272,44 @@ $username = $_SESSION["username"];
 
     <!-- List Page (with Delete) -->
     <div id="listPage" class="container page pt-3 pb-3" style="display: none">
-        <!-- This is the div for showing the item list -->
-        <div class="pagination-container">
-            <div id="listContent"></div>
-            <br><br>
-            <nav id="pageNav" aria-label="Page Navigation">
-                <div class="pagination justify-content-end">
-                    <ul class="pagination">
-                        <li class="page-item" data-page="-"><a class="page-link" href="#">Previous</a></li>
-                        <li id="firstPage" class="page-item active" data-page="1"><a class="page-link" href="#">1</a></li>
-                        <!-- <li class="page-item" data-page="2"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item" data-page="3"><a class="page-link" href="#">3</a></li> -->
-                        <li class="page-item" data-page="+"><a class="page-link" href="#">Next</a></li>
-                    </ul>
+        <div class="row">
+            <!-- Sorting & Searching bar -->
+            <div class="dropdown pr-2">
+                <a class="btn btn-outline-secondary dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Sorting
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" id="sort-by-title" href="#">Sort by Title</a>
+                    <a class="dropdown-item" id="sort-by-year" href="#">Sort by Year</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" id="reset-sort-order" href="#">Reset Sort Order</a>
                 </div>
-            </nav>
+            </div>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" id="search-box" type="search" placeholder="Search" aria-label="Search" value="<?= $search; ?>">
+                <button class="btn btn-outline-success my-2 my-sm-0" id="search-button" type="submit">Search</button>
+                <button class="btn btn-outline-info ml-1 my-2 my-sm-0" id="clear-button">Clear</button>
+                <button class="btn btn-outline-warning ml-1 my-2 my-sm-0" id="clear-all-button">Clear All</button>
+            </form>
+        </div>
+
+        <!-- This is the div for showing the item list -->
+        <div class="row">
+            <div class="pagination-container">
+                <div id="listContent"></div>
+                <br><br>
+                <nav id="pageNav" aria-label="Page Navigation">
+                    <div class="pagination justify-content-end">
+                        <ul class="pagination">
+                            <li class="page-item" data-page="-"><a class="page-link" href="#">Previous</a></li>
+                            <li id="firstPage" class="page-item active" data-page="1"><a class="page-link" href="#">1</a></li>
+                            <!-- <li class="page-item" data-page="2"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item" data-page="3"><a class="page-link" href="#">3</a></li> -->
+                            <li class="page-item" data-page="+"><a class="page-link" href="#">Next</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
         </div>
     </div>
 

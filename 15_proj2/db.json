@@ -45,6 +45,16 @@
                             ],
                             "image": "https:\/\/image.tmdb.org\/t\/p\/w1280\/rzRwTcFvttcN1ZpX2xv4j3tSdJu.jpg"
                         },
+                        "Avengers: Age of Ultron": {
+                            "name": "Avengers: Age of Ultron",
+                            "year": "2015",
+                            "genre": [
+                                "Action",
+                                "Adventure",
+                                "Science Fiction"
+                            ],
+                            "image": "https://image.tmdb.org/t/p/w1280/t90Y3G8UGQp0f0DrP60wRu9gfrH.jpg"
+                        },
                         "Beauty and the Beast": {
                             "name": "Beauty and the Beast",
                             "year": "2017",
