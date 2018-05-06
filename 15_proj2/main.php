@@ -142,8 +142,9 @@ $username = $_SESSION["username"];
                 }
                 html += "</div>";
 
-                if (data.contents === null) {
-                    html = "<h4 class='mt-5'>You currently have no contents!</h4>";
+                if (data.contents == "") {
+                    html = "<h4 class='mt-5 mb-5'>You currently have no contents!</h4>";
+                    html += "<div class='add mb-5'><button class='btn btn-info'><i class='fas fa-plus-square'></i> <small>Add Item</small></button></div>";
                 }
                 $("#listContent").html(html);
                 // console.log(html);
