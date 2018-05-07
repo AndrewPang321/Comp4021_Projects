@@ -24,9 +24,26 @@ if (array_key_exists(strtolower(trim($_GET["username"])), $users)) {
                 ksort($output["contents"]);
                 break;
             case "year":
+                $index = 0;
                 usort($output["contents"], function($a, $b) { //Sort the array using a user defined function
                     return $a["year"] > $b["year"] ? -1 : 1;
                 });
+                $resultAsJson = '{';
+                foreach ($output["contents"] as $item) {
+                    foreach ($item as $subitem) {
+                        if (gettype($subitem) != "array") {
+                            // print_r($subitem);
+                            if ($index == 0) {
+                                $resultAsJson = $resultAsJson . '"' . $item["name"] . '":' . json_encode($item);
+                            } else {
+                                $resultAsJson = $resultAsJson . ',"' . $item["name"] . '":' . json_encode($item);
+                            }
+                            $index++;
+                        }
+                    }
+                }
+                $resultAsJson = $resultAsJson . '}';
+                $output["contents"] = json_decode($resultAsJson);
                 break;
             default:
                 // Nothing to do

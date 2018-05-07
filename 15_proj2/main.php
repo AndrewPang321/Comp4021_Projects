@@ -143,6 +143,31 @@ $username = $_SESSION["username"];
             return html;
         }
 
+        function editPageHelper(url, params, currTag) {
+            if (params["orderby"] != null) {
+                if (url.substr(url.lastIndexOf("/") + 1) == "main.php") {
+                    url += "?orderby=" + encodeURIComponent(params["orderby"]);
+                } else {
+                    url += "&orderby=" + encodeURIComponent(params["orderby"]);
+                }
+            }
+            if (params["s"] != null && params["s"] != "") {
+                if (url.substr(url.lastIndexOf("/") + 1) == "main.php") {
+                    url += "?s=" + encodeURIComponent(params["s"]);
+                } else {
+                    url += "&s=" + encodeURIComponent(params["s"]);
+                }
+            }
+            window.location = url + "#edit";
+            var movieTitle = currTag.parent().parent().find(".name").text();
+            var movieYear = currTag.parent().parent().find(".year").text();
+            var moviePoster = currTag.parent().parent().find(".image img").attr("src");
+            $("#itemName").val(movieTitle);
+            $("#itemYear").val(movieYear);
+            $("#itemPoster").val(moviePoster);
+            $("#reservedPoster").html("<label><img src='" + moviePoster + "' class='w-25 p-1 mt-1 mb-1' alt='Image'></label>");
+        }
+
         $(document).ready(function() {
             /*** For Sorting and Searching ***/
             // Construct the URL without the query string
@@ -182,6 +207,10 @@ $username = $_SESSION["username"];
             $("#clear-all-button").on("click", function() {
                 window.location = url;
                 return false;
+            });
+
+            $(".editForm").on("submit", function() {
+                console.log("SUBMIT");
             });
 
             // This is the hashchange event function
@@ -235,14 +264,7 @@ $username = $_SESSION["username"];
                 paginationHandler();
 
                 $("#listContent .edit").on("click", function() {
-                    window.location = url + "#edit";
-                    var movieTitle = $(this).parent().parent().find(".name").text();
-                    var movieYear = $(this).parent().parent().find(".year").text();
-                    var moviePoster = $(this).parent().parent().find(".image img").attr("src");
-                    $("#itemName").val(movieTitle);
-                    $("#itemYear").val(movieYear);
-                    $("#itemPoster").val(moviePoster);
-                    $("#reservedPoster").html("<label><img src='" + moviePoster + "' class='w-25 p-1 mt-1 mb-1' alt='Image'></label>");
+                    editPageHelper(url, params, $(this));
                     return false;
                 });
             }).fail(function() {
@@ -272,14 +294,7 @@ $username = $_SESSION["username"];
                         paginationHandler();
 
                         $("#listContent .edit").on("click", function() {
-                            window.location = url + "#edit";
-                            var movieTitle = $(this).parent().parent().find(".name").text();
-                            var movieYear = $(this).parent().parent().find(".year").text();
-                            var moviePoster = $(this).parent().parent().find(".image img").attr("src");
-                            $("#itemName").val(movieTitle);
-                            $("#itemYear").val(movieYear);
-                            $("#itemPoster").val(moviePoster);
-                            $("#reservedPoster").html("<label><img src='" + moviePoster + "' class='w-25 p-1 mt-1 mb-1' alt='Image'></label>");
+                            editPageHelper(url, params, $(this));
                             return false;
                         });
                     }).fail(function() {
