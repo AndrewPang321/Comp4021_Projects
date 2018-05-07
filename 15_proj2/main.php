@@ -89,6 +89,60 @@ $username = $_SESSION["username"];
             $(".pagination li:nth-child(2)").addClass("page-item active");
         }
 
+        function listViewHelper(data) {
+            var index = 0;  // For 5 items per page
+            var pageNo = 1; // Initial page number
+            var html;
+            // console.log(data.contents);
+            if (Object.keys(data.contents).length === 0 && data.contents.constructor === Object) {
+                html = "<h4 class='mt-5 mb-5'>No search result is found!</h4>";
+            } else {
+                for (let key in data.contents) {
+                    if (index % 5 === 0) {
+                        if (index === 0) {
+                            // First page will always be displayed
+                            html = "<div data-page='" + pageNo + "'>";
+                        } else {
+                            // Hide other pages
+                            html += "<div data-page='" + pageNo + "' style='display:none;'>";
+                        }
+                        html += "<div class='row'>";
+                        pageNo++;
+                    }
+                    index++;
+                    html += "<div class='item col-4 col-md-3 col-lg-2 mr-4'>";
+                    if (data.contents[key]["image"] != "") {
+                        html += "<div class='image'><img src='" + data.contents[key]["image"] + "' class='w-100 p-1 mt-5 mb-3' alt='Image'></div>";
+                    }
+                    html += "<div class='name'>" + data.contents[key]["name"] + "</div>";
+                    html += "<div class='year pb-1'>" + data.contents[key]["year"] + "</div>";
+                    html += "<div class='row btn-group'>";
+                    html += "<div class='edit pr-2'><button class='btn-sm btn-info'><i class='fas fa-edit'></i> <small>Edit</small></button></div>";
+                    html += "<div class='delete'><button class='btn-sm btn-danger' data-toggle='modal' data-target='#deleteModal'><i class='fas fa-trash-alt'></i> <small>Delete</small></button></div>";
+                    html += "</div>";
+                    
+                    // html += "<div class='types'>";
+                    // for (let type in data[key]["genre"]) {
+                    //     if (type > 0) html += ", ";
+                    //     html += "<span class='type'>" + data[key]["genre"][type] + "</span>";
+                    //     // console.log(data[key]["genre"][type]);
+                    // }
+                    // html += "</div>";
+
+                    html += "</div>";
+                    if (index % 5 === 0) {
+                        // Close row and data-page div
+                        html += "</div>";
+                        html += "</div>";
+                    }
+
+                    console.log(key, data.contents[key]);
+                }
+                html += "</div>";
+            }
+            return html;
+        }
+
         $(document).ready(function() {
             /*** For Sorting and Searching ***/
             // Construct the URL without the query string
@@ -166,56 +220,7 @@ $username = $_SESSION["username"];
                 query += "&s=" + encodeURIComponent(params["s"]);
             }
             $.get("list.php", query, (data) => {
-                var index = 0;  // For 5 items per page
-                var pageNo = 1; // Initial page number
-                var html;
-                console.log(data.contents);
-                if (Object.keys(data.contents).length === 0 && data.contents.constructor === Object) {
-                    html = "<h4 class='mt-5 mb-5'>No search result is found!</h4>";
-                } else {
-                    for (let key in data.contents) {
-                        if (index % 5 === 0) {
-                            if (index === 0) {
-                                // First page will always be displayed
-                                html = "<div data-page='" + pageNo + "'>";
-                            } else {
-                                // Hide other pages
-                                html += "<div data-page='" + pageNo + "' style='display:none;'>";
-                            }
-                            html += "<div class='row'>";
-                            pageNo++;
-                        }
-                        index++;
-                        html += "<div class='item col-4 col-md-3 col-lg-2 mr-4'>";
-                        if (data.contents[key]["image"] != "") {
-                            html += "<div class='image'><img src='" + data.contents[key]["image"] + "' class='w-100 p-1 mt-5 mb-3' alt='Image'></div>";
-                        }
-                        html += "<div class='name'>" + data.contents[key]["name"] + "</div>";
-                        html += "<div class='year pb-1'>" + data.contents[key]["year"] + "</div>";
-                        html += "<div class='row btn-group'>";
-                        html += "<div class='edit pr-2'><button class='btn-sm btn-info'><i class='fas fa-edit'></i> <small>Edit</small></button></div>";
-                        html += "<div class='delete'><button class='btn-sm btn-danger' data-toggle='modal' data-target='#deleteModal'><i class='fas fa-trash-alt'></i> <small>Delete</small></button></div>";
-                        html += "</div>";
-                        
-                        // html += "<div class='types'>";
-                        // for (let type in data[key]["genre"]) {
-                        //     if (type > 0) html += ", ";
-                        //     html += "<span class='type'>" + data[key]["genre"][type] + "</span>";
-                        //     // console.log(data[key]["genre"][type]);
-                        // }
-                        // html += "</div>";
-
-                        html += "</div>";
-                        if (index % 5 === 0) {
-                            // Close row and data-page div
-                            html += "</div>";
-                            html += "</div>";
-                        }
-
-                        console.log(key, data.contents[key]);
-                    }
-                    html += "</div>";
-                }
+                var html = listViewHelper(data);
 
                 if (data.contents == "") {
                     html = "<h4 class='mt-5 mb-5'>You currently have no contents!</h4>";
@@ -256,47 +261,7 @@ $username = $_SESSION["username"];
                     query += "&key=" + encodeURIComponent(name);
                     // Handle the deletion from db.json
                     $.get("delete.php", query, (data) => {
-                        var index = 0;  // For 5 items per page
-                        var pageNo = 1; // Initial page number
-                        var html;
-                        // console.log(data.contents);
-                        if (Object.keys(data.contents).length === 0 && data.contents.constructor === Object) {
-                            html = "<h4 class='mt-5 mb-5'>No search result is found!</h4>";
-                        } else {
-                            for (let key in data.contents) {
-                                if (index % 5 === 0) {
-                                    if (index === 0) {
-                                        // First page will always be displayed
-                                        html = "<div data-page='" + pageNo + "'>";
-                                    } else {
-                                        // Hide other pages
-                                        html += "<div data-page='" + pageNo + "' style='display:none;'>";
-                                    }
-                                    html += "<div class='row'>";
-                                    pageNo++;
-                                }
-                                index++;
-                                html += "<div class='item col-4 col-md-3 col-lg-2 mr-4'>";
-                                if (data.contents[key]["image"] != "") {
-                                    html += "<div class='image'><img src='" + data.contents[key]["image"] + "' class='w-100 p-1 mt-5 mb-3' alt='Image'></div>";
-                                }
-                                html += "<div class='name'>" + data.contents[key]["name"] + "</div>";
-                                html += "<div class='year pb-1'>" + data.contents[key]["year"] + "</div>";
-                                html += "<div class='row btn-group'>";
-                                html += "<div class='edit pr-2'><button class='btn-sm btn-info'><i class='fas fa-edit'></i> <small>Edit</small></button></div>";
-                                html += "<div class='delete'><button class='btn-sm btn-danger' data-toggle='modal' data-target='#deleteModal'><i class='fas fa-trash-alt'></i> <small>Delete</small></button></div>";
-                                html += "</div>";
-                                html += "</div>";
-                                if (index % 5 === 0) {
-                                    // Close row and data-page div
-                                    html += "</div>";
-                                    html += "</div>";
-                                }
-
-                                console.log(key, data.contents[key]);
-                            }
-                            html += "</div>";
-                        }
+                        var html = listViewHelper(data);
                         $("#listContent").html(html);
                         // console.log(html);
 
