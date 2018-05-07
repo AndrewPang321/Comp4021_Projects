@@ -60,7 +60,9 @@ if (array_key_exists(strtolower(trim($_GET["username"])), $users)) {
         $search_result["contents"] = $search_result["contents"] . '}';
         $output["contents"] = json_decode($search_result["contents"]);
     }
-    
+    if (sizeof($output["contents"]) == 0) {
+        $output["contents"] = "";
+    }
 } else {
     $output["success"] = "no";
     $output["contents"] = "";

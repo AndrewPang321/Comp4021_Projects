@@ -5,7 +5,9 @@
                 "firstname": "andrew",
                 "lastname": "pang",
                 "password": "andrew",
-                "contents": ""
+                "contents": [
+                    []
+                ]
             },
             "jack": {
                 "firstname": "jack",
@@ -85,11 +87,6 @@
                             ],
                             "image": "https:\/\/image.tmdb.org\/t\/p\/w1280\/imekS7f1OuHyUP2LAiTEM0zBzUz.jpg"
                         },
-                        "Rampage": {
-                            "name": "Rampage",
-                            "year": "2018",
-                            "image": "https:\/\/image.tmdb.org\/t\/p\/w1280\/30oXQKwibh0uANGMs0Sytw3uN22.jpg"
-                        },
                         "Dunkirk": {
                             "name": "Dunkirk",
                             "year": "2017",
@@ -102,19 +99,19 @@
                 "firstname": "jay",
                 "lastname": "siu",
                 "password": "jay",
-                "contents": ""
+                "contents": []
             },
             "travis": {
                 "firstname": "travis",
                 "lastname": "tang",
                 "password": "travis",
-                "contents": ""
+                "contents": []
             },
             "tiff": {
                 "firstname": "tiff",
                 "lastname": "mak",
                 "password": "tiff",
-                "contents": ""
+                "contents": []
             }
         }
     ]

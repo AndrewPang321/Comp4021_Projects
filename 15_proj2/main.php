@@ -97,46 +97,51 @@ $username = $_SESSION["username"];
             if (Object.keys(data.contents).length === 0 && data.contents.constructor === Object) {
                 html = "<h4 class='mt-5 mb-5'>No search result is found!</h4>";
             } else {
-                for (let key in data.contents) {
-                    if (index % 5 === 0) {
-                        if (index === 0) {
-                            // First page will always be displayed
-                            html = "<div data-page='" + pageNo + "'>";
-                        } else {
-                            // Hide other pages
-                            html += "<div data-page='" + pageNo + "' style='display:none;'>";
+                if (data.contents == "") {
+                    html = "<h4 class='mt-5 mb-5'>You currently have no contents!</h4>";
+                    html += "<div class='mb-5'><button id='noContentAdd' class='btn btn-info'><i class='fas fa-plus-square'></i> <small>Add Item</small></button></div>";
+                } else {
+                    for (let key in data.contents) {
+                        if (index % 5 === 0) {
+                            if (index === 0) {
+                                // First page will always be displayed
+                                html = "<div data-page='" + pageNo + "'>";
+                            } else {
+                                // Hide other pages
+                                html += "<div data-page='" + pageNo + "' style='display:none;'>";
+                            }
+                            html += "<div class='row'>";
+                            pageNo++;
                         }
-                        html += "<div class='row'>";
-                        pageNo++;
-                    }
-                    index++;
-                    html += "<div class='item col-4 col-md-3 col-lg-2 mr-4'>";
-                    if (data.contents[key]["image"] != "") {
-                        html += "<div class='image'><img src='" + data.contents[key]["image"] + "' class='w-100 p-1 mt-5 mb-3' alt='Image'></div>";
-                    }
-                    html += "<div class='name'>" + data.contents[key]["name"] + "</div>";
-                    html += "<div class='year pb-1'>" + data.contents[key]["year"] + "</div>";
-                    html += "<div class='row btn-group'>";
-                    html += "<div class='edit pr-2'><button class='btn-sm btn-info'><i class='fas fa-edit'></i> <small>Edit</small></button></div>";
-                    html += "<div class='delete'><button class='btn-sm btn-danger' data-toggle='modal' data-target='#deleteModal'><i class='fas fa-trash-alt'></i> <small>Delete</small></button></div>";
-                    html += "</div>";
-                    
-                    // html += "<div class='types'>";
-                    // for (let type in data[key]["genre"]) {
-                    //     if (type > 0) html += ", ";
-                    //     html += "<span class='type'>" + data[key]["genre"][type] + "</span>";
-                    //     // console.log(data[key]["genre"][type]);
-                    // }
-                    // html += "</div>";
-
-                    html += "</div>";
-                    if (index % 5 === 0) {
-                        // Close row and data-page div
+                        index++;
+                        html += "<div class='item col-4 col-md-3 col-lg-2 mr-4'>";
+                        if (data.contents[key]["image"] != "") {
+                            html += "<div class='image'><img src='" + data.contents[key]["image"] + "' class='w-100 p-1 mt-5 mb-3' alt='Image'></div>";
+                        }
+                        html += "<div class='name'>" + data.contents[key]["name"] + "</div>";
+                        html += "<div class='year pb-1'>" + data.contents[key]["year"] + "</div>";
+                        html += "<div class='row btn-group'>";
+                        html += "<div class='edit pr-2'><button class='btn-sm btn-info'><i class='fas fa-edit'></i> <small>Edit</small></button></div>";
+                        html += "<div class='delete'><button class='btn-sm btn-danger' data-toggle='modal' data-target='#deleteModal'><i class='fas fa-trash-alt'></i> <small>Delete</small></button></div>";
                         html += "</div>";
-                        html += "</div>";
-                    }
+                        
+                        // html += "<div class='types'>";
+                        // for (let type in data[key]["genre"]) {
+                        //     if (type > 0) html += ", ";
+                        //     html += "<span class='type'>" + data[key]["genre"][type] + "</span>";
+                        //     // console.log(data[key]["genre"][type]);
+                        // }
+                        // html += "</div>";
 
-                    console.log(key, data.contents[key]);
+                        html += "</div>";
+                        if (index % 5 === 0) {
+                            // Close row and data-page div
+                            html += "</div>";
+                            html += "</div>";
+                        }
+
+                        console.log(key, data.contents[key]);
+                    }
                 }
                 html += "</div>";
             }
@@ -220,7 +225,6 @@ $username = $_SESSION["username"];
                             $('#addModal').trigger('focus')
                             // Update Modal's text
                             $("#addModal h5").text("Add \"" + title + "\"");
-                            // $("#deleteModal span").text("Add failed! Duplicated title existed!");
                         });
                     } else {
                         if (params["orderby"] != null && (params["s"] == null || params["s"] == "")) {
@@ -324,11 +328,6 @@ $username = $_SESSION["username"];
             }
             $.get("list.php", query, (data) => {
                 var html = listViewHelper(data);
-
-                if (data.contents == "") {
-                    html = "<h4 class='mt-5 mb-5'>You currently have no contents!</h4>";
-                    html += "<div class='add mb-5'><button class='btn btn-info'><i class='fas fa-plus-square'></i> <small>Add Item</small></button></div>";
-                }
                 $("#listContent").html(html);
                 // console.log(html);
 
@@ -340,6 +339,11 @@ $username = $_SESSION["username"];
                 $("#listContent .edit").on("click", function() {
                     var oldTitle = editPageHelper(url, window.location.href, params, $(this));
                     editFormSubmit(url, window.location.href, params, oldTitle.trim());
+                    return false;
+                });
+
+                $("#noContentAdd").on("click", function() {
+                    window.location = window.location.href + "#add";
                     return false;
                 });
             }).fail(function() {
