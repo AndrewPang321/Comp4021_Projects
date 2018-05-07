@@ -53,7 +53,7 @@
                                 "Adventure",
                                 "Science Fiction"
                             ],
-                            "image": "https://image.tmdb.org/t/p/w1280/t90Y3G8UGQp0f0DrP60wRu9gfrH.jpg"
+                            "image": "https:\/\/image.tmdb.org\/t\/p\/w1280\/t90Y3G8UGQp0f0DrP60wRu9gfrH.jpg"
                         },
                         "Beauty and the Beast": {
                             "name": "Beauty and the Beast",
@@ -84,6 +84,16 @@
                                 "Fantasy"
                             ],
                             "image": "https:\/\/image.tmdb.org\/t\/p\/w1280\/imekS7f1OuHyUP2LAiTEM0zBzUz.jpg"
+                        },
+                        "Rampage": {
+                            "name": "Rampage",
+                            "year": "2018",
+                            "image": "https:\/\/image.tmdb.org\/t\/p\/w1280\/30oXQKwibh0uANGMs0Sytw3uN22.jpg"
+                        },
+                        "Dunkirk": {
+                            "name": "Dunkirk",
+                            "year": "2017",
+                            "image": "https:\/\/image.tmdb.org\/t\/p\/w1280\/bOXBV303Fgkzn2K4FeKDc0O31q4.jpg"
                         }
                     }
                 ]

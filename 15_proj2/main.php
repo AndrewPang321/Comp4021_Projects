@@ -170,15 +170,14 @@ $username = $_SESSION["username"];
         function editFormSubmit(url, href, params, oldTitle) {
             $(".editForm").on("submit", function() {
                 var username = "<?= $username ?>";
-                var updatedTitle = $("#itemName")[0].value.trim();
-                var updatedYear = $("#itemYear")[0].value.trim();
-                var updatedPoster = $("#itemPoster")[0].value.trim();
+                var updatedTitle = $(".editForm #itemName")[0].value.trim();
+                var updatedYear = $(".editForm #itemYear")[0].value.trim();
+                var updatedPoster = $(".editForm #itemPoster")[0].value.trim();
                 var query = "username=" + encodeURIComponent(username);
                 query += "&oldtitle=" + encodeURIComponent(oldTitle);
                 query += "&newtitle=" + encodeURIComponent(updatedTitle);
                 query += "&year=" + encodeURIComponent(updatedYear);
                 query += "&poster=" + encodeURIComponent(updatedPoster);
-                console.log(updatedTitle, updatedYear, updatedPoster);
 
                 $.get("edit.php", query, (data) => {
                     if (params["orderby"] != null && (params["s"] == null || params["s"] == "")) {
@@ -194,14 +193,50 @@ $username = $_SESSION["username"];
                         }
                     }
                     window.location = url;
-                    // if (params["orderby"] != null) {
-                    //     window.location = url + "?orderby=" + params["orderby"] + (params["s"]? "&s=" + params["s"] : "");
-                    // }
-                    // else if (params["s"] != null && params["s"] != "") {
-                    //     window.location = url + "?s=" + params["s"] + (params["orderby"]? "&orderby=" + params["orderby"] : "");
-                    // } else {
-                    //     window.location = url;
-                    // }
+                }).fail(function() {
+                    alert("Unknown error!");
+                }, "json");
+                return false;
+            });
+        }
+
+        function addFormSubmit(url, href, params) {
+            $(".addForm").on("submit", function() {
+                var username = "<?= $username ?>";
+                var title = $(".addForm #itemName")[0].value.trim();
+                var year = $(".addForm #itemYear")[0].value.trim();
+                var poster = $(".addForm #itemPoster")[0].value.trim();
+                var query = "username=" + encodeURIComponent(username);
+                query += "&title=" + encodeURIComponent(title);
+                query += "&year=" + encodeURIComponent(year);
+                query += "&poster=" + encodeURIComponent(poster);
+                console.log(query);
+
+                $.get("add.php", query, (data) => {
+                    if (data.success == "duplicate") {
+                        console.log("DUPLICATION");
+                        $('#addModal').modal('show');
+                        $('#addModal').on('shown.bs.modal', function(e) {
+                            $('#addModal').trigger('focus')
+                            // Update Modal's text
+                            $("#addModal h5").text("Add \"" + title + "\"");
+                            // $("#deleteModal span").text("Add failed! Duplicated title existed!");
+                        });
+                    } else {
+                        if (params["orderby"] != null && (params["s"] == null || params["s"] == "")) {
+                            url += "?orderby=" + encodeURIComponent(params["orderby"]);
+                        }
+                        else if (params["s"] != null && params["s"] != "" && params["orderby"] == null) {
+                            url += "?s=" + encodeURIComponent(params["s"]);
+                        } else if (params["orderby"] != null && params["s"] != null && params["s"] != "") {
+                            if (href.lastIndexOf("s=") < href.lastIndexOf("orderby=")) {
+                                url += "?s=" + encodeURIComponent(params["s"]) + "&orderby=" + encodeURIComponent(params["orderby"]);
+                            } else {
+                                url += "?orderby=" + encodeURIComponent(params["orderby"]) + "&s=" + encodeURIComponent(params["s"]);
+                            }
+                        }
+                        window.location = url;
+                    }
                 }).fail(function() {
                     alert("Unknown error!");
                 }, "json");
@@ -249,6 +284,8 @@ $username = $_SESSION["username"];
                 window.location = url;
                 return false;
             });
+
+            addFormSubmit(url, window.location.href, params);
 
             // This is the hashchange event function
             $(window).on('hashchange', function() {
@@ -352,7 +389,6 @@ $username = $_SESSION["username"];
         body {
             height: 100%;
         }
-
         body {
             /* display: -ms-flexbox;
             display: flex;
@@ -362,18 +398,15 @@ $username = $_SESSION["username"];
             padding-bottom: 40px; */
             background-color: #f5f5f5;
         }
-
         .navbar {
             min-height: 65px;
         }
-
         .editForm {
             width: 100%;
             max-width: 850px;
             padding: 15px;
             margin: auto;
         }
-
         .editForm .form-control {
             position: relative;
             box-sizing: border-box;
@@ -382,6 +415,23 @@ $username = $_SESSION["username"];
             font-size: 16px;
         }
         .editForm .form-control:focus {
+            z-index: 2;
+        }
+        .addForm {
+            width: 100%;
+            max-width: 850px;
+            padding: 15px;
+            margin: auto;
+        }
+
+        .addForm .form-control {
+            position: relative;
+            box-sizing: border-box;
+            height: auto;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .addForm .form-control:focus {
             z-index: 2;
         }
     </style>
@@ -401,6 +451,24 @@ $username = $_SESSION["username"];
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" id="deleteItem" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for delete -->
+    <div class="modal fade" id="addModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <span>Add failed! Duplicated title existed!<span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -498,7 +566,24 @@ $username = $_SESSION["username"];
     </div>
     <!-- Add Page -->
     <div id="addPage" class="container page pt-3 pb-3" style="display: none">
-        Add
+        <form class="addForm">
+            <div class="form-row">
+                <div class="col-6 form-group">
+                    <label for="itemName">Movie Title</label>
+                    <input type="text" class="form-control" id="itemName" placeholder="Enter movie title" required>
+                </div>
+                <div class="col-6 form-group">
+                    <label for="itemYear">Movie Year</label>
+                    <input type="text" class="form-control" id="itemYear" placeholder="Enter movie year" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="itemPoster">Movie Poster</label>
+                <div id="reservedPoster"></div>
+                <input type="text" class="form-control" id="itemPoster" placeholder="Enter movie poster url" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
     </div>
     <!-- Profile Page -->
     <div id="profilePage" class="container page pt-3 pb-3" style="display: none">
