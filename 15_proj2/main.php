@@ -143,19 +143,17 @@ $username = $_SESSION["username"];
             return html;
         }
 
-        function editPageHelper(url, params, currTag) {
-            if (params["orderby"] != null) {
-                if (url.substr(url.lastIndexOf("/") + 1) == "main.php") {
-                    url += "?orderby=" + encodeURIComponent(params["orderby"]);
-                } else {
-                    url += "&orderby=" + encodeURIComponent(params["orderby"]);
-                }
+        function editPageHelper(url, href, params, currTag) {
+            if (params["orderby"] != null && (params["s"] == null || params["s"] == "")) {
+                url += "?orderby=" + encodeURIComponent(params["orderby"]);
             }
-            if (params["s"] != null && params["s"] != "") {
-                if (url.substr(url.lastIndexOf("/") + 1) == "main.php") {
-                    url += "?s=" + encodeURIComponent(params["s"]);
+            else if (params["s"] != null && params["s"] != "" && params["orderby"] == null) {
+                url += "?s=" + encodeURIComponent(params["s"]);
+            } else if (params["orderby"] != null && params["s"] != null && params["s"] != "") {
+                if (href.lastIndexOf("s=") < href.lastIndexOf("orderby=")) {
+                    url += "?s=" + encodeURIComponent(params["s"]) + "&orderby=" + encodeURIComponent(params["orderby"]);
                 } else {
-                    url += "&s=" + encodeURIComponent(params["s"]);
+                    url += "?orderby=" + encodeURIComponent(params["orderby"]) + "&s=" + encodeURIComponent(params["s"]);
                 }
             }
             window.location = url + "#edit";
@@ -166,6 +164,49 @@ $username = $_SESSION["username"];
             $("#itemYear").val(movieYear);
             $("#itemPoster").val(moviePoster);
             $("#reservedPoster").html("<label><img src='" + moviePoster + "' class='w-25 p-1 mt-1 mb-1' alt='Image'></label>");
+            return movieTitle;
+        }
+
+        function editFormSubmit(url, href, params, oldTitle) {
+            $(".editForm").on("submit", function() {
+                var username = "<?= $username ?>";
+                var updatedTitle = $("#itemName")[0].value.trim();
+                var updatedYear = $("#itemYear")[0].value.trim();
+                var updatedPoster = $("#itemPoster")[0].value.trim();
+                var query = "username=" + encodeURIComponent(username);
+                query += "&oldtitle=" + encodeURIComponent(oldTitle);
+                query += "&newtitle=" + encodeURIComponent(updatedTitle);
+                query += "&year=" + encodeURIComponent(updatedYear);
+                query += "&poster=" + encodeURIComponent(updatedPoster);
+                console.log(updatedTitle, updatedYear, updatedPoster);
+
+                $.get("edit.php", query, (data) => {
+                    if (params["orderby"] != null && (params["s"] == null || params["s"] == "")) {
+                        url += "?orderby=" + encodeURIComponent(params["orderby"]);
+                    }
+                    else if (params["s"] != null && params["s"] != "" && params["orderby"] == null) {
+                        url += "?s=" + encodeURIComponent(params["s"]);
+                    } else if (params["orderby"] != null && params["s"] != null && params["s"] != "") {
+                        if (href.lastIndexOf("s=") < href.lastIndexOf("orderby=")) {
+                            url += "?s=" + encodeURIComponent(params["s"]) + "&orderby=" + encodeURIComponent(params["orderby"]);
+                        } else {
+                            url += "?orderby=" + encodeURIComponent(params["orderby"]) + "&s=" + encodeURIComponent(params["s"]);
+                        }
+                    }
+                    window.location = url;
+                    // if (params["orderby"] != null) {
+                    //     window.location = url + "?orderby=" + params["orderby"] + (params["s"]? "&s=" + params["s"] : "");
+                    // }
+                    // else if (params["s"] != null && params["s"] != "") {
+                    //     window.location = url + "?s=" + params["s"] + (params["orderby"]? "&orderby=" + params["orderby"] : "");
+                    // } else {
+                    //     window.location = url;
+                    // }
+                }).fail(function() {
+                    alert("Unknown error!");
+                }, "json");
+                return false;
+            });
         }
 
         $(document).ready(function() {
@@ -207,10 +248,6 @@ $username = $_SESSION["username"];
             $("#clear-all-button").on("click", function() {
                 window.location = url;
                 return false;
-            });
-
-            $(".editForm").on("submit", function() {
-                console.log("SUBMIT");
             });
 
             // This is the hashchange event function
@@ -264,12 +301,14 @@ $username = $_SESSION["username"];
                 paginationHandler();
 
                 $("#listContent .edit").on("click", function() {
-                    editPageHelper(url, params, $(this));
+                    var oldTitle = editPageHelper(url, window.location.href, params, $(this));
+                    editFormSubmit(url, window.location.href, params, oldTitle.trim());
                     return false;
                 });
             }).fail(function() {
                 alert("Unknown error!");
             }, "json");
+
             $('#deleteModal').on('shown.bs.modal', function(e) {
                 $('#deleteModal').trigger('focus')
                 // Get the item name
@@ -294,7 +333,8 @@ $username = $_SESSION["username"];
                         paginationHandler();
 
                         $("#listContent .edit").on("click", function() {
-                            editPageHelper(url, params, $(this));
+                            var oldTitle = editPageHelper(url, window.location.href, params, $(this));
+                            editFormSubmit(url, window.location.href, params, oldTitle.trim());
                             return false;
                         });
                     }).fail(function() {
@@ -441,17 +481,17 @@ $username = $_SESSION["username"];
             <div class="form-row">
                 <div class="col-6 form-group">
                     <label for="itemName">Movie Title</label>
-                    <input type="text" class="form-control" id="itemName" placeholder="Enter movie title">
+                    <input type="text" class="form-control" id="itemName" placeholder="Enter movie title" required>
                 </div>
                 <div class="col-6 form-group">
                     <label for="itemYear">Movie Year</label>
-                    <input type="text" class="form-control" id="itemYear" placeholder="Enter movie year">
+                    <input type="text" class="form-control" id="itemYear" placeholder="Enter movie year" required>
                 </div>
             </div>
             <div class="form-group">
                 <label for="itemPoster">Movie Poster</label>
                 <div id="reservedPoster"></div>
-                <input type="text" class="form-control" id="itemPoster" placeholder="Enter movie poster url">
+                <input type="text" class="form-control" id="itemPoster" placeholder="Enter movie poster url" required>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
