@@ -11,7 +11,7 @@ if (isset($_SESSION["username"])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Lab 7: Sign In Form</title>
+    <title>Movie Collection</title>
     <meta charset="utf-8">
     <meta name="viewport" 
           content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -51,7 +51,6 @@ if (isset($_SESSION["username"])) {
       body {
         height: 100%;
       }
-
       body {
         display: -ms-flexbox;
         display: flex;
@@ -86,7 +85,8 @@ if (isset($_SESSION["username"])) {
 <body class="text-center">
   <form class="signinForm">
     <!-- <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    <h1 class="h2 mb-4 font-weight-bold">Movie Collection</h1>
+    <h1 class="h4 mb-3 font-weight-normal">Please sign in</h1>
 
     <div class="form-group">
       <div class="input-group">

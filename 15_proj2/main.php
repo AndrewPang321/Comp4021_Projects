@@ -25,7 +25,7 @@ $username = $_SESSION["username"];
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Lab 7: Main Page</title>
+    <title>Movie Collection</title>
     <meta charset="utf-8">
     <meta name="viewport" 
           content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -375,6 +375,17 @@ $username = $_SESSION["username"];
             addFormSubmit(url, window.location.href, params);
             profileFormSubmit(url, window.location.href, params);
 
+            // Set up the avatar
+            var user = "<?= $username ?>";
+            avatarQuery = "username=" + encodeURIComponent(user);
+            $.get("avatar.php", avatarQuery, (data) => {
+                if (data.success == "yes") {
+                    $(".avatar").attr("src", data.contents);
+                }
+            }).fail(function() {
+                alert("Unknown error!");
+            }, "json");
+
             // This is the hashchange event function
             $(window).on('hashchange', function() {
                 // Get the fragment identifier from the URL
@@ -481,6 +492,12 @@ $username = $_SESSION["username"];
         .navbar {
             min-height: 65px;
         }
+        .avatar {
+            vertical-align: middle;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
 
         .editForm {
             width: 100%;
@@ -505,7 +522,6 @@ $username = $_SESSION["username"];
             padding: 15px;
             margin: auto;
         }
-
         .addForm .form-control {
             position: relative;
             box-sizing: border-box;
@@ -576,7 +592,7 @@ $username = $_SESSION["username"];
 
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(87, 99, 102);">
-        <a class="navbar-brand" href="#">COMP4021 Group 15</a>
+        <a class="navbar-brand" href="#">Movie Collection</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -592,8 +608,9 @@ $username = $_SESSION["username"];
                     <a class="nav-link" href="#profile">Profile</a>
                 </li>
             </ul>
+            <img src="https://cdn4.iconfinder.com/data/icons/superheroes/512/batman-256.png" alt="Avatar" class="avatar mr-1">
             <h5><span class="badge badge-dark mr-3 mt-2 p-2">
-                <i class="far fa-smile"></i>
+                <!-- <i class="far fa-smile"></i> -->
                 Welcome, <?= htmlspecialchars($firstname) ?>!
             </span></h5>
             <form id="signoutForm" action="signout.php">
