@@ -5,12 +5,29 @@ $db = json_decode($db, true);
 // Get the JSON "users" list
 $user = $db["users"][0];
 
+
 // Get and trim the input fields if necessary, also all lowercase
 $username = strtolower(trim($_POST["username"]));
 $firstname = strtolower(trim($_POST["firstname"]));
 $lastname = strtolower(trim($_POST["lastname"]));
 $password = $_POST["password"];
 $confirm = $_POST["confirm"];
+
+require_once "recaptchalib.php";
+// empty response
+$response = null;
+//reCAPTCHA secret key
+$secret = "6Ldd91cUAAAAAIVf5OXUoovuzMZ1Ib6IFereLArs";
+// check secret key
+$reCaptcha = new ReCaptcha($secret);
+
+if ($_POST["g-recaptcha-response"]) {
+    $response = $reCaptcha->verifyResponse(
+        $_SERVER["REMOTE_ADDR"],
+        $_POST["g-recaptcha-response"]
+    );
+};
+
 
 // Check the username
 if (array_key_exists($username, $user))
@@ -27,6 +44,7 @@ elseif ($password != $confirm)
 
 // Add the user
 else {
+  if($response != NULL && $response -> success){
     // Append the new user in the JSON under "users"
     $user[$username]["firstname"] = $firstname;
     $user[$username]["lastname"] = $lastname;
@@ -42,6 +60,7 @@ else {
     $_SESSION["username"] = $username;
 
     $output["success"] = "";
+  }
 }
 
 header("content-type: application/json");
