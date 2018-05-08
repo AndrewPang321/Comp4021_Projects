@@ -28,7 +28,7 @@ if($response != NULL && $response -> success)
     // Set up the session
     session_start();
     $_SESSION["username"] = $_POST["username"];
-
+    
     $output["success"] = "";
 }
 else

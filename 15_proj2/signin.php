@@ -20,19 +20,48 @@ if (isset($_SESSION["username"])) {
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css">
     <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script src="jquery-cookie-master/src/jquery.cookie.js" type="text/javascript"></script>
     <script>
     $(document).ready(function() {
 
+      var remember = $.cookie('remember');
+      if (remember == 'true')
+      {
+          var uname = $.cookie('uname');
+          var password = $.cookie('password');
+          // autofill the fields
+          $('#username').val(uname);
+          $('#password').val(password);
+          if ($.cookie('remember'))
+          {
+            document.getElementById("RM").checked = true;
+          }
+      }
         // Add the code to submit the form via AJAX
         $(".signinForm").on("submit", () => {
           // AJAX submit the form
           var query = $(".signinForm").serialize();
-
           $.post("signinuser.php", query, (data) => {
             if (data.error) {
               $("#signinError").text(data.error);
               $("#signinError").show();
             } else {
+              if (document.getElementById("RM").checked) {
+                var uname = $('#username').val();
+                var password = $('#password').val();
+
+                // set cookies to expire in 14 days
+                $.cookie('uname', uname, { expires: 14 });
+                $.cookie('password', password, { expires: 14 });
+                $.cookie('remember', true, { expires: 14 });
+              }
+              else
+              {
+                // reset cookies
+                $.cookie('uname', null);
+                $.cookie('password', null);
+                $.cookie('remember', null);
+              }
               window.location = "main.php";
             }
           }, "json");
@@ -44,6 +73,7 @@ if (isset($_SESSION["username"])) {
         $("#registerButton").on("click", function() {
           window.location = "register.html";
         });
+
     });
     </script>
     <style>
@@ -106,7 +136,7 @@ if (isset($_SESSION["username"])) {
     </div>
     <div class="checkbox mb-3">
       <label>
-        <input type="checkbox" value="remember-me"> Remember me
+        <input type="checkbox" value="remember-me" id="RM"> Remember me
       </label>
     </div>
     <div class="g-recaptcha" data-sitekey="6Ldd91cUAAAAAAaDUOpOlWsbgW_ZF37CbjLWT3M8"></div>
