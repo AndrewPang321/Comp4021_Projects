@@ -405,6 +405,7 @@ $username = $_SESSION["username"];
         .navbar {
             min-height: 65px;
         }
+
         .editForm {
             width: 100%;
             max-width: 850px;
@@ -421,6 +422,7 @@ $username = $_SESSION["username"];
         .editForm .form-control:focus {
             z-index: 2;
         }
+
         .addForm {
             width: 100%;
             max-width: 850px;
@@ -436,6 +438,24 @@ $username = $_SESSION["username"];
             font-size: 16px;
         }
         .addForm .form-control:focus {
+            z-index: 2;
+        }
+
+        .addProfileForm {
+            width: 100%;
+            max-width: 850px;
+            padding: 15px;
+            margin: auto;
+        }
+
+        .addProfileForm .form-control {
+            position: relative;
+            box-sizing: border-box;
+            height: auto;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .addProfileForm .form-control:focus {
             z-index: 2;
         }
     </style>
@@ -589,9 +609,83 @@ $username = $_SESSION["username"];
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
+
     <!-- Profile Page -->
     <div id="profilePage" class="container page pt-3 pb-3" style="display: none">
-        Profile
+        <form class="addProfileForm">
+
+            <div class="form-row">
+                <div class="col-6 form-group">
+                    <label for="profileUsername">Username</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fas fa-user"></i></div>
+                        </div>
+                        <input type="text" class="form-control" id="profileUsername" name="profileUsername" placeholder="Enter username" required autofocus>
+                    </div>
+                </div>
+                <div id="unavailError" class="col-6 form-group text-danger" style="display: none">
+                    <label></label>
+                    <div class="input-group"></div>
+                    <i class="fas fa-times"></i> The username is not available.
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-6 form-group">
+                    <label for="profileFirstName">First Name</label>
+                    <input type="text" class="form-control" id="profileFirstName" name="profileFirstName" placeholder="First Name" required>
+                </div>
+                <div class="col-6 form-group">
+                    <label for="profileLastName">Last Name</label>
+                    <input type="text" class="form-control" id="profileFirstName" name="profileLastName" placeholder="Last Name" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-12 form-group">
+                    <label for="profilePic">Profile Picture</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fas fa-user-circle"></i></div>
+                        </div>
+                        <input type="text" class="form-control" id="profilePic" name="profilePic" placeholder="Profile Picture" required>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="form-row">
+                <div class="col-6 form-group">
+                    <label for="profileOldPw">Current Password</label>
+                    <input type="text" class="form-control" id="profileOldPw" name="profileOldPw" placeholder="Current Password" required>
+                </div>
+                <div class="col-6 form-group">
+                    <label for="profileNewPw">New Password</label>
+                    <input type="text" class="form-control" id="profileNewPw" name="profileNewPw" placeholder="New Password" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div id="unavailError" class="col-6 form-group text-danger" style="display: none">
+                    <label></label>
+                    <div class="input-group"></div>
+                    <i class="fas fa-times"></i> The password is not correct.
+                </div>
+            </div> -->
+            <div class="form-row">
+                <div class="col-6 form-group">
+                    <label for="profilePw">Confirm Password</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fas fa-key"></i></div>
+                        </div>
+                        <input type="text" class="form-control" id="profilePw" name="profilePw" placeholder="Confirm Password" required>
+                    </div>
+                </div>
+                <div id="unavailError" class="col-6 form-group text-danger" style="display: none">
+                    <label></label>
+                    <div class="input-group"></div>
+                    <i class="fas fa-times"></i> The username is not available.
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
     </div>
 </body>
 </html>
