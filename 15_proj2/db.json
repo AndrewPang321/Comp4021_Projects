@@ -5,14 +5,14 @@
                 "firstname": "andrew",
                 "lastname": "pang",
                 "password": "andrew",
-                "contents": [
-                    []
-                ]
+                "profilepic": "",
+                "contents": []
             },
             "jack": {
                 "firstname": "jack",
                 "lastname": "ng",
                 "password": "jack",
+                "profilepic": "",
                 "contents": [
                     {
                         "Avengers: Infinity War": {
@@ -99,18 +99,21 @@
                 "firstname": "jay",
                 "lastname": "siu",
                 "password": "jay",
+                "profilepic": "",
                 "contents": []
             },
             "travis": {
                 "firstname": "travis",
                 "lastname": "tang",
                 "password": "travis",
+                "profilepic": "",
                 "contents": []
             },
             "tiff": {
                 "firstname": "tiff",
                 "lastname": "mak",
                 "password": "tiff",
+                "profilepic": "",
                 "contents": []
             }
         }

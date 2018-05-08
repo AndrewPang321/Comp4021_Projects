@@ -151,8 +151,7 @@ $username = $_SESSION["username"];
         function editPageHelper(url, href, params, currTag) {
             if (params["orderby"] != null && (params["s"] == null || params["s"] == "")) {
                 url += "?orderby=" + encodeURIComponent(params["orderby"]);
-            }
-            else if (params["s"] != null && params["s"] != "" && params["orderby"] == null) {
+            } else if (params["s"] != null && params["s"] != "" && params["orderby"] == null) {
                 url += "?s=" + encodeURIComponent(params["s"]);
             } else if (params["orderby"] != null && params["s"] != null && params["s"] != "") {
                 if (href.lastIndexOf("s=") < href.lastIndexOf("orderby=")) {
@@ -187,8 +186,7 @@ $username = $_SESSION["username"];
                 $.get("edit.php", query, (data) => {
                     if (params["orderby"] != null && (params["s"] == null || params["s"] == "")) {
                         url += "?orderby=" + encodeURIComponent(params["orderby"]);
-                    }
-                    else if (params["s"] != null && params["s"] != "" && params["orderby"] == null) {
+                    } else if (params["s"] != null && params["s"] != "" && params["orderby"] == null) {
                         url += "?s=" + encodeURIComponent(params["s"]);
                     } else if (params["orderby"] != null && params["s"] != null && params["s"] != "") {
                         if (href.lastIndexOf("s=") < href.lastIndexOf("orderby=")) {
@@ -215,11 +213,9 @@ $username = $_SESSION["username"];
                 query += "&title=" + encodeURIComponent(title);
                 query += "&year=" + encodeURIComponent(year);
                 query += "&poster=" + encodeURIComponent(poster);
-                console.log(query);
 
                 $.get("add.php", query, (data) => {
                     if (data.success == "duplicate") {
-                        console.log("DUPLICATION");
                         $('#addModal').modal('show');
                         $('#addModal').on('shown.bs.modal', function(e) {
                             $('#addModal').trigger('focus')
@@ -229,8 +225,7 @@ $username = $_SESSION["username"];
                     } else {
                         if (params["orderby"] != null && (params["s"] == null || params["s"] == "")) {
                             url += "?orderby=" + encodeURIComponent(params["orderby"]);
-                        }
-                        else if (params["s"] != null && params["s"] != "" && params["orderby"] == null) {
+                        } else if (params["s"] != null && params["s"] != "" && params["orderby"] == null) {
                             url += "?s=" + encodeURIComponent(params["s"]);
                         } else if (params["orderby"] != null && params["s"] != null && params["s"] != "") {
                             if (href.lastIndexOf("s=") < href.lastIndexOf("orderby=")) {
@@ -244,6 +239,76 @@ $username = $_SESSION["username"];
                 }).fail(function() {
                     alert("Unknown error!");
                 }, "json");
+                return false;
+            });
+        }
+
+        function profileFormSubmit(url, href, params) {
+            $(".addProfileForm").on("submit", function() {
+                var oldusername = "<?= $username ?>";
+                var newusername = $(".addProfileForm #profileUsername")[0].value.trim();
+                var firstname = $(".addProfileForm #profileFirstName")[0].value.trim();
+                var lastname = $(".addProfileForm #profileLastName")[0].value.trim();
+                var profilepic = $(".addProfileForm #profilePic")[0].value.trim();
+                var password = $(".addProfileForm #profilePw")[0].value.trim();
+                var query = "oldusername=" + encodeURIComponent(oldusername);
+                query += "&newusername=" + encodeURIComponent(newusername);
+                query += "&firstname=" + encodeURIComponent(firstname);
+                query += "&lastname=" + encodeURIComponent(lastname);
+                query += "&profilepic=" + encodeURIComponent(profilepic);
+                query += "&password=" + encodeURIComponent(password);
+
+                $.post("profile.php", query, (data) => {
+                    if (data.success == "incorrect") {
+                        $('#addModal').modal('show');
+                        $('#addModal').on('shown.bs.modal', function(e) {
+                            $('#addModal').trigger('focus')
+                            // Update Modal's text
+                            $("#addModal h5").text("Update Profile");
+                            $("#addModal .modal-body span").text("Incorrect password!");
+                        });
+                    } else {
+                        if (oldusername == newusername) {
+                            redirect = href.substr(0, href.lastIndexOf("#"));
+                            window.location = redirect;
+                        } else {
+                            var signinQuery = "username=" + encodeURIComponent(newusername);
+                            signinQuery += "&password=" + encodeURIComponent(password);
+                            // Automatically login the user again after update of username
+                            $.post("signinuser.php", signinQuery, (data) => {
+                                if (data.error) {
+                                    console.log("Sign-in error after update the profile.");
+                                } else {
+                                    if (params["orderby"] != null && (params["s"] == null || params["s"] == "")) {
+                                        url += "?orderby=" + encodeURIComponent(params["orderby"]);
+                                    } else if (params["s"] != null && params["s"] != "" && params["orderby"] == null) {
+                                        url += "?s=" + encodeURIComponent(params["s"]);
+                                    } else if (params["orderby"] != null && params["s"] != null && params["s"] != "") {
+                                        if (href.lastIndexOf("s=") < href.lastIndexOf("orderby=")) {
+                                            url += "?s=" + encodeURIComponent(params["s"]) + "&orderby=" + encodeURIComponent(params["orderby"]);
+                                        } else {
+                                            url += "?orderby=" + encodeURIComponent(params["orderby"]) + "&s=" + encodeURIComponent(params["s"]);
+                                        }
+                                    }
+                                    window.location = url;
+                                }
+                            }, "json");
+                        }
+                    }
+                }).fail(function() {
+                    alert("Unknown error!");
+                }, "json");
+                return false;
+            });
+        }
+
+        function addItemButtonRegister() {
+            $("#noContentAdd").on("click", function() {
+                if (window.location.href.substr(window.location.href.length - 1) != "#") {
+                    window.location = window.location.href + "#add";
+                } else {
+                    window.location = window.location.href + "add";
+                }
                 return false;
             });
         }
@@ -288,8 +353,27 @@ $username = $_SESSION["username"];
                 window.location = url;
                 return false;
             });
+            // Check for the username in profile page
+            $("#profilePage #profileUsername").on("change", function() {
+                // Hide the error
+                $("#profilePage #unavailError").hide();
+                // Show the error if it is not available
+                if ($("#profileUsername").val() != "") {
+                    var oldusername = "<?= $username ?>";
+                    if (oldusername != $("#profileUsername").val()) {
+                        var query = "username=" + encodeURIComponent($("#profileUsername").val());
+                        $.getJSON("checkusername.php", query, function(data) {
+                            if (data.available == "no")
+                                $("#profilePage #unavailError").show();
+                            else 
+                                $("#profilePage #unavailError").hide();
+                        });
+                    }
+                }
+            });
 
             addFormSubmit(url, window.location.href, params);
+            profileFormSubmit(url, window.location.href, params);
 
             // This is the hashchange event function
             $(window).on('hashchange', function() {
@@ -342,10 +426,7 @@ $username = $_SESSION["username"];
                     return false;
                 });
 
-                $("#noContentAdd").on("click", function() {
-                    window.location = window.location.href + "#add";
-                    return false;
-                });
+                addItemButtonRegister();
             }).fail(function() {
                 alert("Unknown error!");
             }, "json");
@@ -366,7 +447,8 @@ $username = $_SESSION["username"];
                         var html = listViewHelper(data);
                         $("#listContent").html(html);
                         // console.log(html);
-
+                        addItemButtonRegister();
+                        
                         // Dynamically create pagination nav bar
                         deletePagination(originalTotalPage);
                         createPagination($(".pagination-container #listContent div[data-page]").length);
@@ -394,12 +476,6 @@ $username = $_SESSION["username"];
             height: 100%;
         }
         body {
-            /* display: -ms-flexbox;
-            display: flex;
-            -ms-flex-align: center;
-            align-items: center;
-            padding-top: 40px;
-            padding-bottom: 40px; */
             background-color: #f5f5f5;
         }
         .navbar {
@@ -480,7 +556,7 @@ $username = $_SESSION["username"];
         </div>
     </div>
 
-    <!-- Modal for delete -->
+    <!-- Modal for Add -->
     <div class="modal fade" id="addModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -613,7 +689,6 @@ $username = $_SESSION["username"];
     <!-- Profile Page -->
     <div id="profilePage" class="container page pt-3 pb-3" style="display: none">
         <form class="addProfileForm">
-
             <div class="form-row">
                 <div class="col-6 form-group">
                     <label for="profileUsername">Username</label>
@@ -627,7 +702,7 @@ $username = $_SESSION["username"];
                 <div id="unavailError" class="col-6 form-group text-danger" style="display: none">
                     <label></label>
                     <div class="input-group"></div>
-                    <i class="fas fa-times"></i> The username is not available.
+                    <i class="fas fa-times"></i> The username is already existed.
                 </div>
             </div>
             <div class="form-row">
@@ -637,7 +712,7 @@ $username = $_SESSION["username"];
                 </div>
                 <div class="col-6 form-group">
                     <label for="profileLastName">Last Name</label>
-                    <input type="text" class="form-control" id="profileFirstName" name="profileLastName" placeholder="Last Name" required>
+                    <input type="text" class="form-control" id="profileLastName" name="profileLastName" placeholder="Last Name" required>
                 </div>
             </div>
             <div class="form-row">
@@ -669,7 +744,7 @@ $username = $_SESSION["username"];
                 </div>
             </div> -->
             <div class="form-row">
-                <div class="col-6 form-group">
+                <div class="col-12 form-group">
                     <label for="profilePw">Confirm Password</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -678,11 +753,11 @@ $username = $_SESSION["username"];
                         <input type="text" class="form-control" id="profilePw" name="profilePw" placeholder="Confirm Password" required>
                     </div>
                 </div>
-                <div id="unavailError" class="col-6 form-group text-danger" style="display: none">
+                <!-- <div id="unavailError" class="col-6 form-group text-danger" style="display: none">
                     <label></label>
                     <div class="input-group"></div>
-                    <i class="fas fa-times"></i> The username is not available.
-                </div>
+                    <i class="fas fa-times"></i> Incorrect password.
+                </div> -->
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
