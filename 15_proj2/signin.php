@@ -1,5 +1,4 @@
 <?php
-
 // Add the code to start the session
 session_start();
 // Add the code to avoid double sign in
@@ -13,13 +12,14 @@ if (isset($_SESSION["username"])) {
 <head>
     <title>Movie Collection</title>
     <meta charset="utf-8">
-    <meta name="viewport" 
+    <meta name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"> 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css">
+    <script src='https://www.google.com/recaptcha/api.js'></script>
     <script>
     $(document).ready(function() {
 
@@ -104,11 +104,12 @@ if (isset($_SESSION["username"])) {
         <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
       </div>
     </div>
-    <div class="checkbox mb-3">
+    <div class="checkbox mb-1">
       <label>
         <input type="checkbox" value="remember-me"> Remember me
       </label>
     </div>
+    <div class="g-recaptcha mb-3" data-sitekey="6Ldd91cUAAAAAAaDUOpOlWsbgW_ZF37CbjLWT3M8"></div>
     <div class="form-group text-center">
       <button type="submit" class="btn btn-lg btn-primary btn-block"><i class="fas fa-sign-in-alt mr-2"></i> Sign In</button>
     </div>
