@@ -49,6 +49,7 @@ else {
     $user[$username]["firstname"] = $firstname;
     $user[$username]["lastname"] = $lastname;
     $user[$username]["password"] = $password;
+    $user[$username]["profilepic"] = "";
     $user[$username]["contents"] = "";
     // Replace the new user list in the original JSON
     $db["users"][0] = $user;

@@ -18,7 +18,11 @@ if (array_key_exists(strtolower(trim($_GET["username"])), $users)) {
     // Delete corresponding JSON obj
     unset($output["contents"][$key]);
     // Update the record
-    $db["users"][0][strtolower(trim($_GET["username"]))]["contents"][0] = $output["contents"];
+    if (sizeof($output["contents"]) != 0) {
+        $db["users"][0][strtolower(trim($_GET["username"]))]["contents"][0] = $output["contents"];
+    } else {
+        $db["users"][0][strtolower(trim($_GET["username"]))]["contents"] = [];
+    }
     file_put_contents("db.json", json_encode($db, JSON_PRETTY_PRINT));
 
     // Sorting
