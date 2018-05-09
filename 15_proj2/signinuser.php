@@ -21,19 +21,18 @@ if ($_POST["g-recaptcha-response"]) {
 
 
 // Check the username and password and reCAPTCHA
-if($response != NULL && $response -> success)
-{if (array_key_exists($_POST["username"], $users) &&
-    $users[$_POST["username"]]["password"] == $_POST["password"])  {
+if($response != NULL && $response -> success) {
+    if (array_key_exists($_POST["username"], $users) &&
+        $users[$_POST["username"]]["password"] == $_POST["password"])  {
 
-    // Set up the session
-    session_start();
-    $_SESSION["username"] = $_POST["username"];
+        // Set up the session
+        session_start();
+        $_SESSION["username"] = $_POST["username"];
 
-    $output["success"] = "";
-}
-else
-    $output["error"] = "Username/password is not correct!";
-
+        $output["success"] = "";
+    } else {
+        $output["error"] = "Username/password is not correct!";
+    }
 }
 
 header("content-type: application/json");

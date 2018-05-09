@@ -104,12 +104,12 @@ if (isset($_SESSION["username"])) {
         <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
       </div>
     </div>
-    <div class="checkbox mb-3">
+    <div class="checkbox mb-1">
       <label>
         <input type="checkbox" value="remember-me"> Remember me
       </label>
     </div>
-    <div class="g-recaptcha" data-sitekey="6Ldd91cUAAAAAAaDUOpOlWsbgW_ZF37CbjLWT3M8"></div>
+    <div class="g-recaptcha mb-3" data-sitekey="6Ldd91cUAAAAAAaDUOpOlWsbgW_ZF37CbjLWT3M8"></div>
     <div class="form-group text-center">
       <button type="submit" class="btn btn-lg btn-primary btn-block"><i class="fas fa-sign-in-alt mr-2"></i> Sign In</button>
     </div>
