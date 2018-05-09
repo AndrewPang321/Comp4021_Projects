@@ -124,14 +124,6 @@ $username = $_SESSION["username"];
                         html += "<div class='edit pr-2'><button class='btn-sm btn-info'><i class='fas fa-edit'></i> <small>Edit</small></button></div>";
                         html += "<div class='delete'><button class='btn-sm btn-danger' data-toggle='modal' data-target='#deleteModal'><i class='fas fa-trash-alt'></i> <small>Delete</small></button></div>";
                         html += "</div>";
-                        
-                        // html += "<div class='types'>";
-                        // for (let type in data[key]["genre"]) {
-                        //     if (type > 0) html += ", ";
-                        //     html += "<span class='type'>" + data[key]["genre"][type] + "</span>";
-                        //     // console.log(data[key]["genre"][type]);
-                        // }
-                        // html += "</div>";
 
                         html += "</div>";
                         if (index % 5 === 0) {
@@ -146,6 +138,27 @@ $username = $_SESSION["username"];
                 html += "</div>";
             }
             return html;
+        }
+
+        function profilePageHelper() {
+            var username = "<?= $username ?>";
+            var firstname, lastname, propic;
+            var query = "username=" + encodeURIComponent(username);
+            $.get("getprofile.php", query, (data) => {
+                firstname = data.contents.firstname;
+                lastname = data.contents.lastname;
+                propic = data.contents.profilepic;
+                $("#profileUsername").val(username);
+                $("#profileFirstName").val(firstname);
+                $("#profileLastName").val(lastname);
+                if (propic == "") {
+                    propic = "https://cdn4.iconfinder.com/data/icons/superheroes/512/batman-256.png";
+                }
+                $("#profilePic").val(propic);
+                $("#reservedProfilePic").html("<img src='" + propic + "' alt='Avatar' class='avatar mb-1'>");
+            }).fail(function() {
+                alert("Unknown error!");
+            }, "json");
         }
 
         function editPageHelper(url, href, params, currTag) {
@@ -164,10 +177,10 @@ $username = $_SESSION["username"];
             var movieTitle = currTag.parent().parent().find(".name").text();
             var movieYear = currTag.parent().parent().find(".year").text();
             var moviePoster = currTag.parent().parent().find(".image img").attr("src");
-            $("#itemName").val(movieTitle);
-            $("#itemYear").val(movieYear);
-            $("#itemPoster").val(moviePoster);
-            $("#reservedPoster").html("<label><img src='" + moviePoster + "' class='w-25 p-1 mt-1 mb-1' alt='Image'></label>");
+            $(".editForm #itemName").val(movieTitle);
+            $(".editForm #itemYear").val(movieYear);
+            $(".editForm #itemPoster").val(moviePoster);
+            $(".editForm #reservedPoster").html("<label><img src='" + moviePoster + "' class='w-25 p-1 mt-1 mb-1' alt='Image'></label>");
             return movieTitle;
         }
 
@@ -274,6 +287,7 @@ $username = $_SESSION["username"];
                         } else {
                             var signinQuery = "username=" + encodeURIComponent(newusername);
                             signinQuery += "&password=" + encodeURIComponent(password);
+                            signinQuery += "&auto=yes";
                             // Automatically login the user again after update of username
                             $.post("signinuser.php", signinQuery, (data) => {
                                 if (data.error) {
@@ -405,6 +419,7 @@ $username = $_SESSION["username"];
                         $("#editPage").show();
                         break;
                     case "#profile":
+                        profilePageHelper();
                         $("#profilePage").show();
                         break;
                 }
@@ -735,11 +750,12 @@ $username = $_SESSION["username"];
             <div class="form-row">
                 <div class="col-12 form-group">
                     <label for="profilePic">Profile Picture</label>
+                    <div id="reservedProfilePic"></div>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <div class="input-group-text"><i class="fas fa-user-circle"></i></div>
                         </div>
-                        <input type="text" class="form-control" id="profilePic" name="profilePic" placeholder="Profile Picture" required>
+                        <input type="text" class="form-control" id="profilePic" name="profilePic" placeholder="Profile Picture url" required>
                     </div>
                 </div>
             </div>
@@ -767,7 +783,7 @@ $username = $_SESSION["username"];
                         <div class="input-group-prepend">
                             <div class="input-group-text"><i class="fas fa-key"></i></div>
                         </div>
-                        <input type="text" class="form-control" id="profilePw" name="profilePw" placeholder="Confirm Password" required>
+                        <input type="password" class="form-control" id="profilePw" name="profilePw" placeholder="Confirm Password" required>
                     </div>
                 </div>
                 <!-- <div id="unavailError" class="col-6 form-group text-danger" style="display: none">

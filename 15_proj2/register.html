@@ -31,7 +31,9 @@
             // AJAX submit the form
             var query = $(".regForm").serialize();
             $.post("registeruser.php", query, function(data) {
-                if (data.error) {
+                if (data == null) {
+                    $("#missingRecaptcha").show();
+                } else if (data.error) {
                     $("#regError").text(data.error);
                     $("#regError").show();
                 }
@@ -174,6 +176,9 @@
       <div class="form-row pb-2">
         <div id="regError" class="col form-group text-center text-danger" style="display: none">
           <i class="fas fa-times"></i> <span>Registration error!</span>
+        </div>
+        <div id="missingRecaptcha" class="col form-group text-center text-danger" style="display: none">
+          <i class="fas fa-times"></i> <span>reCAPTCHA verification error!</span>
         </div>
       </div>
       <p class="mt-5 mb-3 text-muted">&copy; COMP4021 Group 15</p>

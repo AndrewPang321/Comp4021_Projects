@@ -12,27 +12,43 @@ $secret = "6Ldd91cUAAAAAIVf5OXUoovuzMZ1Ib6IFereLArs";
 $reCaptcha = new ReCaptcha($secret);
 
 
-if ($_POST["g-recaptcha-response"]) {
-    $response = $reCaptcha->verifyResponse(
-        $_SERVER["REMOTE_ADDR"],
-        $_POST["g-recaptcha-response"]
-    );
-};
+if ($_POST["auto"] != "yes") {
+    if ($_POST["g-recaptcha-response"]) {
+        $response = $reCaptcha->verifyResponse(
+            $_SERVER["REMOTE_ADDR"],
+            $_POST["g-recaptcha-response"]
+        );
+    };
+}
 
 
 // Check the username and password and reCAPTCHA
-if($response != NULL && $response -> success) {
-    if (array_key_exists($_POST["username"], $users) &&
-        $users[$_POST["username"]]["password"] == $_POST["password"])  {
+if ($_POST["auto"] != "yes") {
+    if($response != NULL && $response -> success) {
+        if (array_key_exists($_POST["username"], $users) &&
+            $users[$_POST["username"]]["password"] == $_POST["password"])  {
 
-        // Set up the session
-        session_start();
-        $_SESSION["username"] = $_POST["username"];
+            // Set up the session
+            session_start();
+            $_SESSION["username"] = $_POST["username"];
 
-        $output["success"] = "";
-    } else {
-        $output["error"] = "Username/password is not correct!";
+            $output["success"] = "";
+        } else {
+            $output["error"] = "Username/password is not correct!";
+        }
     }
+} elseif ($_POST["auto"] == "yes") {
+    if (array_key_exists($_POST["username"], $users) &&
+            $users[$_POST["username"]]["password"] == $_POST["password"])  {
+
+            // Set up the session
+            session_start();
+            $_SESSION["username"] = $_POST["username"];
+
+            $output["success"] = "";
+        } else {
+            $output["error"] = "Username/password is not correct!";
+        }
 }
 
 header("content-type: application/json");

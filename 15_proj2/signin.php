@@ -42,7 +42,9 @@ if (isset($_SESSION["username"])) {
           // AJAX submit the form
           var query = $(".signinForm").serialize();
           $.post("signinuser.php", query, (data) => {
-            if (data.error) {
+            if (data == null) {
+              $("#missingRecaptcha").show();
+            } else if (data.error) {
               $("#signinError").text(data.error);
               $("#signinError").show();
             } else {
@@ -145,6 +147,9 @@ if (isset($_SESSION["username"])) {
     </div>
     <div id="signinError" class="form-group text-center text-danger" style="display: none">
       <i class="fas fa-times"></i> <span>Sign in error!</span>
+    </div>
+    <div id="missingRecaptcha" class="form-group text-center text-danger" style="display: none">
+      <i class="fas fa-times"></i> <span>reCAPTCHA verification error!</span>
     </div>
     <hr>
     <div class="form-text text-center mb-2">
