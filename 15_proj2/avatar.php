@@ -8,7 +8,8 @@ $users = $db["users"][0];
 $username = $_GET["username"];
 
 // Check the username and make the output
-if (array_key_exists(strtolower(trim($_GET["username"])), $users)) {
+if (array_key_exists(strtolower(trim($_GET["username"])), $users) 
+        && $users[strtolower(trim($_GET["username"]))]["profilepic"] != "") {
     $output["success"] = "yes";
     $output["contents"] = $users[strtolower(trim($_GET["username"]))]["profilepic"];
 } else {
