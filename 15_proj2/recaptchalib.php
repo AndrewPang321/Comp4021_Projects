@@ -29,6 +29,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 /**
  * A ReCaptchaResponse is returned from checkAnswer().
  */
@@ -37,6 +38,7 @@ class ReCaptchaResponse
     public $success;
     public $errorCodes;
 }
+
 class ReCaptcha
 {
     private static $_signupUrl = "https://www.google.com/recaptcha/admin";
@@ -44,6 +46,7 @@ class ReCaptcha
         "https://www.google.com/recaptcha/api/siteverify?";
     private $_secret;
     private static $_version = "php_1.0";
+
     /**
      * Constructor.
      *
@@ -57,6 +60,7 @@ class ReCaptcha
         }
         $this->_secret=$secret;
     }
+
     /**
      * Encodes the given data into a query string format.
      *
@@ -70,10 +74,12 @@ class ReCaptcha
         foreach ($data as $key => $value) {
             $req .= $key . '=' . urlencode(stripslashes($value)) . '&';
         }
+
         // Cut the last '&'
         $req=substr($req, 0, strlen($req)-1);
         return $req;
     }
+
     /**
      * Submits an HTTP GET to a reCAPTCHA server.
      *
@@ -88,6 +94,7 @@ class ReCaptcha
         $response = file_get_contents($path . $req);
         return $response;
     }
+
     /**
      * Calls the reCAPTCHA siteverify API to verify whether the user passes
      * CAPTCHA test.
@@ -106,6 +113,7 @@ class ReCaptcha
             $recaptchaResponse->errorCodes = 'missing-input';
             return $recaptchaResponse;
         }
+
         $getResponse = $this->_submitHttpGet(
             self::$_siteVerifyUrl,
             array (
@@ -117,13 +125,16 @@ class ReCaptcha
         );
         $answers = json_decode($getResponse, true);
         $recaptchaResponse = new ReCaptchaResponse();
+
         if (trim($answers ['success']) == true) {
             $recaptchaResponse->success = true;
         } else {
             $recaptchaResponse->success = false;
             $recaptchaResponse->errorCodes = $answers [error-codes];
         }
+
         return $recaptchaResponse;
     }
 }
+
 ?>
