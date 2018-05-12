@@ -6,7 +6,15 @@
                 "lastname": "pang",
                 "password": "andrew",
                 "profilepic": "https:\/\/cdn4.iconfinder.com\/data\/icons\/people-avatars-12\/24\/people_avatar_head_deadpool_marvel_hero-512.png",
-                "contents": []
+                "contents": [
+                    {
+                        "A Quiet Place": {
+                            "name": "A Quiet Place",
+                            "year": "2018",
+                            "image": "https:\/\/image.tmdb.org\/t\/p\/w1280\/nAU74GmpUk7t5iklEp3bufwDq4n.jpg"
+                        }
+                    }
+                ]
             },
             "jack": {
                 "firstname": "jack",

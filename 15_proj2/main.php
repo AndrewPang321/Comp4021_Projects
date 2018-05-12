@@ -110,11 +110,11 @@ $username = $_SESSION["username"];
                                 // Hide other pages
                                 html += "<div data-page='" + pageNo + "' style='display:none;'>";
                             }
-                            html += "<div class='row'>";
+                            html += "<div class='row justify-content-center'>";
                             pageNo++;
                         }
                         index++;
-                        html += "<div class='item col-4 col-md-3 col-lg-2 mr-4'>";
+                        html += "<div class='item col-5 col-md-3 col-lg-2 mr-4'>";
                         if (data.contents[key]["image"] != "") {
                             html += "<div class='image'><img src='" + data.contents[key]["image"] + "' class='w-100 p-1 mt-5 mb-3' alt='Image'></div>";
                         }
@@ -638,7 +638,7 @@ $username = $_SESSION["username"];
     <div id="listPage" class="container page pt-3 pb-3" style="display: none">
         <div class="row">
             <!-- Sorting & Searching bar -->
-            <div class="dropdown pr-2">
+            <div class="col-12 col-sm-1 dropdown text-left">
                 <a class="btn btn-outline-secondary dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Sorting
                 </a>
@@ -649,12 +649,20 @@ $username = $_SESSION["username"];
                     <a class="dropdown-item" id="reset-sort-order" href="#">Reset Sort Order</a>
                 </div>
             </div>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" id="search-box" type="search" placeholder="Search" aria-label="Search" value="<?= $search; ?>">
-                <button class="btn btn-outline-success my-2 my-sm-0" id="search-button" type="submit">Search</button>
-                <button class="btn btn-outline-info ml-1 my-2 my-sm-0" id="clear-button">Clear</button>
-                <button class="btn btn-outline-warning ml-1 my-2 my-sm-0" id="clear-all-button">Clear All</button>
-            </form>
+            <div class="col-12 col-sm-11 text-left">
+                <div class="row">
+                    <form class="form-inline my-2 my-lg-0">
+                        <div class="col-12 col-sm-5 text-left">
+                            <input class="form-control ml-sm-3" id="search-box" type="search" placeholder="Search" aria-label="Search" value="<?= $search; ?>">
+                        </div>
+                        <div class="col-12 col-sm-7 text-left">
+                            <button class="btn btn-outline-success my-2 my-sm-0" id="search-button" type="submit">Search</button>
+                            <button class="btn btn-outline-info ml-1 my-2 my-sm-0" id="clear-button">Clear</button>
+                            <button class="btn btn-outline-warning ml-1 my-2 my-sm-0" id="clear-all-button">Clear All</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <!-- This is the div for showing the item list -->
