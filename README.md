@@ -8,7 +8,6 @@ It is a shooting survival game. Each play has three lives. To win the game, the 
 It is a movie collection management system which allows users to create an account and manage their movies, including CRUD operations.
 
 ## Framworks
-- Angular.js
 - Bootstrap 4
 - Font Awesome
 - jQuery
